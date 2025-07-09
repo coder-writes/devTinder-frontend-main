@@ -15,6 +15,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { setUser } from '../utils/userSlicer';
 import { useDispatch } from 'react-redux';
+import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 const Signup = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -26,7 +27,7 @@ const handleSignUp = async (e) => {
     if (e) e.preventDefault();
     try {
         const res = await axios.post(
-            "http://localhost:7777/signup",
+            createApiUrl(API_ENDPOINTS.SIGNUP),
             { firstName, lastName, emailId, password, phoneNo },
             { withCredentials: true }
         );

@@ -15,7 +15,6 @@ import {
 } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
 import { Link } from 'react-router';
-import { colors } from '../theme/colors';
 
 const NewFeature = () => {
   const [progress, setProgress] = useState(0);

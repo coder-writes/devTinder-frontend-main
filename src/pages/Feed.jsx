@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addFeed } from '../utils/feedSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 
 
 const Feed = () => {
@@ -43,7 +44,7 @@ const Feed = () => {
     const getFeed = async () => {
         if (feed) return;
         try {
-            const response = await axios.get('http://localhost:7777/feed', {
+            const response = await axios.get(createApiUrl(API_ENDPOINTS.FEED), {
                 withCredentials: true
             });
             dispatch(addFeed(response?.data?.data));
@@ -104,7 +105,7 @@ const Feed = () => {
             if (currentProfile?._id) {
                 try {
                     await axios.post(
-                        `http://localhost:7777/request/send/${status}/${currentProfile._id}`,
+                        createApiUrl(API_ENDPOINTS.SEND_REQUEST(status, currentProfile._id)),
                         {},
                         { withCredentials: true }
                     );
