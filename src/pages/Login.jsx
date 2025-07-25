@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import {
     AuthLayout,
@@ -18,6 +18,7 @@ import LoginError from '../components/auth/LoginError';
 import { useSelector } from 'react-redux';
 import { createApiUrl, API_ENDPOINTS, googleAuth } from '../utils/apiConfig';
 import {useGoogleLogin} from '@react-oauth/google';
+
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
@@ -26,9 +27,14 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
-    if(user) {
-        navigate('/feed'); // Redirect to feed if user is already logged in// Prevent rendering the login page
-    }
+
+    // Handle navigation when user is already logged in
+    useEffect(() => {
+        if (user) {
+            navigate('/feed'); // Redirect to feed if user is already logged in
+        }
+    }, [user, navigate]);
+
     const handleLogin = async ()=>{
         try{
             const response = await axios.post(
