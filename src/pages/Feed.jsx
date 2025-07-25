@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
     ProfileCard,
+    DevBackground,
     PageLayout,
     PageHeader,
     KeyboardHints,
@@ -13,7 +14,6 @@ import {
 } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFeed } from '../utils/feedSlice';
-import { removeUser } from '../utils/userSlicer';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
@@ -22,7 +22,6 @@ import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 const Feed = () => {
     const [current, setCurrent] = useState(0);
     const [swipe, setSwipe] = useState(null); // 'left' or 'right'
-    const [isLoading, setIsLoading] = useState(false);
     const timeoutRef = useRef(null);
     const Navigate = useNavigate();
     const dispatch = useDispatch();
@@ -30,52 +29,38 @@ const Feed = () => {
     
 
     const user = useSelector((state) => state.user);
-    const feed = useSelector((state) => state.feed);
     
-    // Redirect to login if no user
-    useEffect(() => {
-        if (!user) {
-            console.log("No user found, redirecting to login");
-            Navigate('/login');
-            return;
-        }
-    }, [user, Navigate]);
+    if (user) {
+        Navigate('/feed');
+    }
 
-    const getFeed = useCallback(async () => {
-        if (feed || !user || isLoading) return;
-        
-        setIsLoading(true);
+    const feed = useSelector((state) => state.feed);
+    useEffect(() => {
+        if (!feed) {
+            Navigate('/');
+        }
+    }, [feed, Navigate]);
+
+    const getFeed = async () => {
+        if (feed) return;
         try {
-            console.log("Fetching feed data...");
             const response = await axios.get(createApiUrl(API_ENDPOINTS.FEED), {
                 withCredentials: true
             });
-            console.log("Feed response:", response.data);
             dispatch(addFeed(response?.data?.data));
-        } catch (err) {
-            console.error("Error fetching feed:", err);
-            // The global interceptor will handle 401 errors
-            // Just log here and let it handle the auth state cleanup
-        } finally {
-            setIsLoading(false);
-        }
-    }, [feed, user, dispatch, isLoading]);
+            Navigate('/feed');
 
-    // Get feed data when component mounts
-    useEffect(() => {
-        if (user && !feed) {
-            getFeed();
+        } catch (err) {
+            console.log("Error fetching feed:", err);
         }
-    }, [user, feed, getFeed]);
+    }
 
     const sendRequest = async ()=>{
         
     }
-    
-    // Remove the old useEffect that was calling getFeed
-    // useEffect(() => {
-    //     getFeed()
-    // }, []);
+    useEffect(() => {
+        getFeed()
+    }, []);
 
     // Toast for swipe actions
     const showToast = useCallback((direction, name) => {
@@ -157,27 +142,13 @@ const Feed = () => {
     }, [handleSwipe]);
 
 
-    if (!feed && isLoading) {
-        return (
-            <PageLayout fullHeight compact>
-                <div className="flex flex-1 items-center justify-center min-h-[60vh] px-4 sm:px-6">
-                    <div className="text-center">
-                        <div className="text-4xl mb-4">🔄</div>
-                        <h2 className="text-xl font-bold text-white mb-2">Loading Feed...</h2>
-                        <p className="text-gray-400">Finding awesome developers for you</p>
-                    </div>
-                </div>
-            </PageLayout>
-        );
-    }
-
-    if (!feed) return null;
+    if (!feed) return;
     console.log("Feed:", feed);
 
     if (current >= feed.length) {
         return (
-            <PageLayout fullHeight compact>
-                <div className="flex flex-1 items-center justify-center min-h-[60vh] px-4 sm:px-6">
+            <PageLayout backgroundComponent={<DevBackground />} fullHeight compact>
+                <div className="flex flex-1 items-center justify-center min-h-[60vh] px-4">
                     <CompletionScreen
                         title="Mission Complete!"
                         message="You have explored all the people that were relevant to you"
@@ -194,31 +165,87 @@ const Feed = () => {
 
     return (
         <>
-            <PageLayout fullHeight>
-                <div className="flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <PageHeader
-                        title="DevTinder"
-                        subtitle="Find your next coding partner"
-                    />
-                    <div className="flex-1 flex items-center justify-center py-4 sm:py-8">
-                        <div className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
-                            <AnimatePresence custom={swipe}>
+            <PageLayout fullHeight backgroundComponent={<DevBackground />}>
+                <div className="flex flex-col flex-1 w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+                    <div className="pt-20 sm:pt-24 md:pt-28 pb-4 sm:pb-6">
+                        <PageHeader
+                            title="DevTinder"
+                            subtitle="Find your next coding partner"
+                        />
+                    </div>
+                    
+                    {/* Main Content Area */}
+                    <div className="flex-1 flex flex-col items-center justify-center min-h-0 pb-4 sm:pb-6 md:pb-8">
+                        {/* Profile Card Container */}
+                        <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl h-full max-h-[calc(100vh-200px)] flex items-center justify-center">
+                            <AnimatePresence custom={swipe} mode="wait">
                                 <ProfileCard
+                                    key={current} // Add key for better animation handling
                                     profile={profile}
                                     swipe={swipe}
                                     onSwipe={handleSwipe}
                                 />
                             </AnimatePresence>
                         </div>
-                    </div>
-                    
-                    {/* Mobile Keyboard Hints */}
-                    <div className="sm:hidden pb-4">
-                        <KeyboardHints />
+                        
+                        {/* Keyboard Hints - Only show on larger screens */}
+                        <div className="hidden md:block mt-6 lg:mt-8">
+                            <KeyboardHints />
+                        </div>
+                        
+                        {/* Mobile Action Buttons */}
+                        <div className="flex md:hidden gap-6 mt-4 sm:mt-6 px-4">
+                            <button
+                                onClick={() => handleSwipe('left')}
+                                disabled={!!swipe}
+                                className="flex-1 max-w-[120px] h-14 rounded-full bg-gradient-to-r from-red-500/20 to-red-600/20 border-2 border-red-500/50 backdrop-blur-sm transition-all duration-300 hover:from-red-500/30 hover:to-red-600/30 hover:border-red-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group"
+                            >
+                                <FaTimes className="text-red-400 text-xl group-hover:scale-110 transition-transform duration-200" />
+                            </button>
+                            <button
+                                onClick={() => handleSwipe('right')}
+                                disabled={!!swipe}
+                                className="flex-1 max-w-[120px] h-14 rounded-full bg-gradient-to-r from-green-500/20 to-green-600/20 border-2 border-green-500/50 backdrop-blur-sm transition-all duration-300 hover:from-green-500/30 hover:to-green-600/30 hover:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group"
+                            >
+                                <FaHeart className="text-green-400 text-xl group-hover:scale-110 transition-transform duration-200" />
+                            </button>
+                        </div>
+                        
+                        {/* Progress Indicator */}
+                        <div className="mt-4 sm:mt-6 w-full max-w-md">
+                            <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+                                <span>Progress</span>
+                                <span>{Math.min(current + 1, feed.length)} / {feed.length}</span>
+                            </div>
+                            <div className="w-full bg-gray-700/50 rounded-full h-2 backdrop-blur-sm">
+                                <div 
+                                    className="bg-gradient-to-r from-pink-500 to-yellow-500 h-2 rounded-full transition-all duration-500 ease-out"
+                                    style={{ width: `${((current + 1) / feed.length) * 100}%` }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <ToastContainer />
+                <ToastContainer 
+                    position="top-center"
+                    autoClose={1500}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                    toastStyle={{
+                        background: 'rgba(31, 41, 55, 0.95)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '12px',
+                        fontSize: '14px'
+                    }}
+                />
             </PageLayout>
         </>
     );

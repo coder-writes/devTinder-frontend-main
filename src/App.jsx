@@ -13,12 +13,11 @@ import Settings from './pages/Settings.jsx';
 import Connections from './pages/Connections.jsx';
 import Requests from './pages/Requests.jsx';
 import NewFeature from './pages/NewFeature.jsx';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 const App = () => {
     return (
         <>
         <Provider store = {store}>
-            <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            
         <BrowserRouter>
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#232526] to-[#414345] text-white">
          <main className="flex-grow">
@@ -40,7 +39,6 @@ const App = () => {
          </main>
         </div>
         </BrowserRouter>
-            </GoogleOAuthProvider>
         </Provider>
         </>
     );

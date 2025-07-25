@@ -1,3 +1,6 @@
+// Background Components
+export { default as DevBackground } from './background/DevBackground';
+
 // Auth Components
 export { default as AuthLogo } from './auth/AuthLogo';
 export { default as AuthHeader } from './auth/AuthHeader';

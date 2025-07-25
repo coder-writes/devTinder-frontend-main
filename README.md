@@ -18,6 +18,7 @@ DevTinder is a modern, interactive web application that connects developers base
 ### 🎨 Modern UI/UX
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Smooth Animations**: Framer Motion powered transitions and micro-interactions
+- **Animated Backgrounds**: CSS-powered animated backgrounds and visual effects
 - **Dark Theme**: Professional dark theme optimized for developers
 
 ### 📱 Key Pages
@@ -43,6 +44,9 @@ DevTinder is a modern, interactive web application that connects developers base
 - **Framer Motion 12.23.0** - Production-ready motion library
 - **React Icons 5.5.0** - Popular icon library
 - **Lucide React 0.525.0** - Beautiful & consistent icons
+
+### 3D Graphics
+- **CSS Animations** - Pure CSS-based animated backgrounds and effects
 
 ### HTTP & API
 - **Axios 1.10.0** - Promise-based HTTP client
@@ -108,7 +112,7 @@ src/
 │   ├── layout/          # Layout and wrapper components
 │   ├── profile/         # Profile related components
 │   ├── ui/              # Generic UI components
-│   └── 3d/              # 3D graphics components
+│   └── background/      # Background and visual effect components
 ├── pages/               # Page components
 │   ├── Body.jsx         # Main layout wrapper
 │   ├── Feed.jsx         # Profile swiping interface

@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { commonStyles } from '../../theme/colors';
 
 const InputField = ({ 
@@ -12,23 +11,8 @@ const InputField = ({
     required = false 
 }) => {
     return (
-        <motion.div 
-            className={`
-                ${commonStyles.inputField}
-                group focus-within:scale-[1.02]
-            `}
-            whileFocus={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-        >
-            {Icon && (
-                <motion.div
-                    initial={{ scale: 0.8, opacity: 0.7 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="text-purple-400 group-focus-within:text-purple-300 transition-colors duration-200"
-                >
-                    <Icon size={18} />
-                </motion.div>
-            )}
+        <div className={commonStyles.inputField}>
+            {Icon && <Icon size={16} className="text-[#ff512f] sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" />}
             <input
                 type={type}
                 placeholder={placeholder}
@@ -36,14 +20,9 @@ const InputField = ({
                 onChange={onChange}
                 name={name}
                 required={required}
-                className={`
-                    bg-transparent w-full focus:outline-none text-white 
-                    placeholder-gray-400 placeholder:transition-colors
-                    focus:placeholder-gray-500
-                    ${commonStyles.responsiveText.body}
-                `}
+                className="bg-transparent w-full focus:outline-none text-white placeholder-gray-400 text-sm sm:text-base min-w-0"
             />
-        </motion.div>
+        </div>
     );
 };
 
