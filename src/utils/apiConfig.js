@@ -1,13 +1,40 @@
 // API configuration and base URL
 import axios from "axios";
+import store from './reduxStore.js';
+import { removeUser } from './userSlicer.js';
+
 export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:7777';
-
-
 
 const api = axios.create({
     baseURL: BASE_URL,
     withCredentials: true, 
 });
+
+// Add response interceptor to handle 401 errors globally
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            console.log("Global 401 handler: Clearing auth state");
+            
+            // Clear Redux state
+            store.dispatch(removeUser());
+            store.dispatch({ type: "feed/addFeed", payload: null });
+            
+            // Clear local storage
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            sessionStorage.clear();
+            
+            // Only redirect if we're not already on login/signup pages
+            const currentPath = window.location.pathname;
+            if (!currentPath.includes('/login') && !currentPath.includes('/signup') && !currentPath.includes('/')) {
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 export const googleAuth = async (code) => api.get(`/google?code=${code}`);
 

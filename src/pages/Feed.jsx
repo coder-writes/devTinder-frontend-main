@@ -13,6 +13,7 @@ import {
 } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFeed } from '../utils/feedSlice';
+import { removeUser } from '../utils/userSlicer';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
@@ -21,6 +22,7 @@ import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 const Feed = () => {
     const [current, setCurrent] = useState(0);
     const [swipe, setSwipe] = useState(null); // 'left' or 'right'
+    const [isLoading, setIsLoading] = useState(false);
     const timeoutRef = useRef(null);
     const Navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,8 +42,9 @@ const Feed = () => {
     }, [user, Navigate]);
 
     const getFeed = useCallback(async () => {
-        if (feed || !user) return;
+        if (feed || !user || isLoading) return;
         
+        setIsLoading(true);
         try {
             console.log("Fetching feed data...");
             const response = await axios.get(createApiUrl(API_ENDPOINTS.FEED), {
@@ -51,12 +54,12 @@ const Feed = () => {
             dispatch(addFeed(response?.data?.data));
         } catch (err) {
             console.error("Error fetching feed:", err);
-            if (err.response?.status === 401) {
-                console.log("Unauthorized, redirecting to login");
-                Navigate('/login');
-            }
+            // The global interceptor will handle 401 errors
+            // Just log here and let it handle the auth state cleanup
+        } finally {
+            setIsLoading(false);
         }
-    }, [feed, user, dispatch, Navigate]);
+    }, [feed, user, dispatch, isLoading]);
 
     // Get feed data when component mounts
     useEffect(() => {
@@ -154,7 +157,21 @@ const Feed = () => {
     }, [handleSwipe]);
 
 
-    if (!feed) return;
+    if (!feed && isLoading) {
+        return (
+            <PageLayout fullHeight compact>
+                <div className="flex flex-1 items-center justify-center min-h-[60vh] px-4 sm:px-6">
+                    <div className="text-center">
+                        <div className="text-4xl mb-4">🔄</div>
+                        <h2 className="text-xl font-bold text-white mb-2">Loading Feed...</h2>
+                        <p className="text-gray-400">Finding awesome developers for you</p>
+                    </div>
+                </div>
+            </PageLayout>
+        );
+    }
+
+    if (!feed) return null;
     console.log("Feed:", feed);
 
     if (current >= feed.length) {
