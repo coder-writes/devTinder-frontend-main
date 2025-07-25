@@ -6,7 +6,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
     ProfileCard,
-    DevBackground,
     PageLayout,
     PageHeader,
     KeyboardHints,
@@ -29,38 +28,51 @@ const Feed = () => {
     
 
     const user = useSelector((state) => state.user);
-    
-    if (user) {
-        Navigate('/feed');
-    }
-
     const feed = useSelector((state) => state.feed);
+    
+    // Redirect to login if no user
     useEffect(() => {
-        if (!feed) {
-            Navigate('/');
+        if (!user) {
+            console.log("No user found, redirecting to login");
+            Navigate('/login');
+            return;
         }
-    }, [feed, Navigate]);
+    }, [user, Navigate]);
 
-    const getFeed = async () => {
-        if (feed) return;
+    const getFeed = useCallback(async () => {
+        if (feed || !user) return;
+        
         try {
+            console.log("Fetching feed data...");
             const response = await axios.get(createApiUrl(API_ENDPOINTS.FEED), {
                 withCredentials: true
             });
+            console.log("Feed response:", response.data);
             dispatch(addFeed(response?.data?.data));
-            Navigate('/feed');
-
         } catch (err) {
-            console.log("Error fetching feed:", err);
+            console.error("Error fetching feed:", err);
+            if (err.response?.status === 401) {
+                console.log("Unauthorized, redirecting to login");
+                Navigate('/login');
+            }
         }
-    }
+    }, [feed, user, dispatch, Navigate]);
+
+    // Get feed data when component mounts
+    useEffect(() => {
+        if (user && !feed) {
+            getFeed();
+        }
+    }, [user, feed, getFeed]);
 
     const sendRequest = async ()=>{
         
     }
-    useEffect(() => {
-        getFeed()
-    }, []);
+    
+    // Remove the old useEffect that was calling getFeed
+    // useEffect(() => {
+    //     getFeed()
+    // }, []);
 
     // Toast for swipe actions
     const showToast = useCallback((direction, name) => {
@@ -147,8 +159,8 @@ const Feed = () => {
 
     if (current >= feed.length) {
         return (
-            <PageLayout backgroundComponent={<DevBackground />} fullHeight compact>
-                <div className="flex flex-1 items-center justify-center min-h-[60vh]">
+            <PageLayout fullHeight compact>
+                <div className="flex flex-1 items-center justify-center min-h-[60vh] px-4 sm:px-6">
                     <CompletionScreen
                         title="Mission Complete!"
                         message="You have explored all the people that were relevant to you"
@@ -165,20 +177,27 @@ const Feed = () => {
 
     return (
         <>
-            <PageLayout fullHeight backgroundComponent={<DevBackground />}>
-                <div className="flex flex-col flex-1 w-full max-w-5xl mx-auto">
+            <PageLayout fullHeight>
+                <div className="flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                     <PageHeader
                         title="DevTinder"
                         subtitle="Find your next coding partner"
                     />
-                    <div className="flex-1 flex items-center justify-center">
-                        <AnimatePresence custom={swipe}>
-                            <ProfileCard
-                                profile={profile}
-                                swipe={swipe}
-                                onSwipe={handleSwipe}
-                            />
-                        </AnimatePresence>
+                    <div className="flex-1 flex items-center justify-center py-4 sm:py-8">
+                        <div className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
+                            <AnimatePresence custom={swipe}>
+                                <ProfileCard
+                                    profile={profile}
+                                    swipe={swipe}
+                                    onSwipe={handleSwipe}
+                                />
+                            </AnimatePresence>
+                        </div>
+                    </div>
+                    
+                    {/* Mobile Keyboard Hints */}
+                    <div className="sm:hidden pb-4">
+                        <KeyboardHints />
                     </div>
                 </div>
 

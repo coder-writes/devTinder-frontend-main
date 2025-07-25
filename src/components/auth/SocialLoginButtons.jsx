@@ -1,24 +1,27 @@
 import React from 'react';
 import SocialLoginButton from './SocialLoginButton';
 
-const SocialLoginButtons = ({ type = "login" }) => {
+const SocialLoginButtons = ({ type = "login", onGoogleLogin, onGithubLogin, onLinkedinLogin }) => {
     const actionText = type === "login" ? "Log in" : "Sign up";
     
     const socialProviders = [
         {
             provider: 'google',
             icon: 'https://img.icons8.com/color/20/google-logo.png',
-            text: `${actionText} with Google`
+            text: `${actionText} with Google`,
+            onClick: onGoogleLogin
         },
         {
             provider: 'github',
             icon: 'https://img.icons8.com/ios-glyphs/20/ffffff/github.png',
-            text: `${actionText} with GitHub`
+            text: `${actionText} with GitHub`,
+            onClick: onGithubLogin
         },
         {
             provider: 'linkedin',
             icon: 'https://img.icons8.com/ios-filled/20/ffffff/linkedin.png',
-            text: `${actionText} with LinkedIn`
+            text: `${actionText} with LinkedIn`,
+            onClick: onLinkedinLogin
         }
     ];
 
@@ -30,6 +33,7 @@ const SocialLoginButtons = ({ type = "login" }) => {
                     provider={social.provider}
                     icon={social.icon}
                     text={social.text}
+                    onClick={social.onClick}
                 />
             ))}
         </div>

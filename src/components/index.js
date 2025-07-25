@@ -1,7 +1,3 @@
-// 3D Components
-export { default as DevBackground } from './3d/DevBackground';
-export { default as FloatingCodeElements } from './3d/FloatingCodeElements';
-
 // Auth Components
 export { default as AuthLogo } from './auth/AuthLogo';
 export { default as AuthHeader } from './auth/AuthHeader';

@@ -16,11 +16,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import LoginError from '../components/auth/LoginError';
 import { useSelector } from 'react-redux';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
+import { createApiUrl, API_ENDPOINTS, googleAuth } from '../utils/apiConfig';
+import {useGoogleLogin} from '@react-oauth/google';
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
     const [error, setError] = useState(null);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
@@ -37,14 +39,55 @@ const Login = () => {
                 },
                 { withCredentials: true }
             );
-                console.log("Login successful:", response.data);  
+            console.log("Login successful:", response.data);
+            
+            // Handle the new response format from backend
+            if (response.data.user) {
+                dispatch(setUser(response.data.user));
+            } else {
+                // Fallback for old format
                 dispatch(setUser(response.data));
-                navigate('/feed'); 
+            }
+            navigate('/feed'); 
         }catch(err){
-            setError(err?.response?.data || "Login failed. Please try again.");
+            const errorMsg = err?.response?.data?.error || err?.response?.data?.message || err?.response?.data || "Login failed. Please try again.";
+            setError(errorMsg);
             console.error("Login failed:", err);
         }
     }
+    const responseGoogle = async (authResult) => {
+        setIsGoogleLoading(true);
+        setError(null); // Clear any previous errors
+        
+        try{
+            console.log("Google auth result:", authResult);
+            if(authResult?.code){
+                console.log("Sending code to backend:", authResult.code);
+                const result = await googleAuth(authResult.code);
+                console.log("Backend response:", result);
+                
+                // Assuming your backend returns user data in result.data
+                const userData = result.data.user;
+                dispatch(setUser(userData));
+                navigate('/feed');
+            } else {
+                console.error("No authorization code received");
+                setError("Google login failed. No authorization code received.");
+            }
+        }   
+        catch(err){
+            console.error("Google login failed:", err);
+            setError(err?.response?.data?.message || "Google login failed. Please try again.");
+        } finally {
+            setIsGoogleLoading(false);
+        }
+    }
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: responseGoogle,
+        onError: responseGoogle,
+        flow: 'auth-code',
+    })
     return (
         <AuthLayout>
             <LoginError message={error ? (typeof error === 'string' ? error : error.message || "Login failed. Please try again.") : null} />
@@ -53,7 +96,11 @@ const Login = () => {
                 title="Welcome Back"
                 subtitle="Log in to DevTinder and connect with awesome devs!"
             />
-            <SocialLoginButtons type="login" />
+            <SocialLoginButtons 
+                onGoogleLogin={googleLogin} 
+                type="login"
+                isGoogleLoading={isGoogleLoading}
+            />
             <AuthDivider text="or log in with your email" />
             <form
                 className="space-y-4"

@@ -6,43 +6,78 @@ import axios from 'axios';
 import { Link } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../utils/userSlicer';
+import { useNavigate } from 'react-router';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
-const Header = () => {
 
+const Header = () => {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     console.log("User data in Header:", user);
-    // const navigate = useNavigate();
     const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = React.useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+    const handleClick = async () => {
+        if(!user){
+            navigate('/');
+        }else{
+            navigate('/feed');
+        }
+    }
 
     // Close dropdown when clicking outside
     React.useEffect(() => {
         const handleClick = (e) => {
             if (!e.target.closest("#user-menu")) setMenuOpen(false);
+            if (!e.target.closest("#mobile-menu")) setMobileMenuOpen(false);
         };
-        if (menuOpen) document.addEventListener("mousedown", handleClick);
+        if (menuOpen || mobileMenuOpen) document.addEventListener("mousedown", handleClick);
         return () => document.removeEventListener("mousedown", handleClick);
-    }, [menuOpen]);
+    }, [menuOpen, mobileMenuOpen]);
 
     const handleLogout = async () => {
         try{
+            // Set logout flag to prevent user fetch
+            sessionStorage.setItem('logging_out', 'true');
+            
+            // Close the menu first
+            setMenuOpen(false);
+            
             const response = await axios.post(createApiUrl(API_ENDPOINTS.LOGOUT), {}, { withCredentials: true });
             console.log("Logout successful:", response);
+            
             if(response.status === 200) {
+                // Clear Redux state
                 dispatch(removeUser());
                 dispatch({ type: "feed/addFeed", payload: null });
-                window.location.href = '/';
+                
+                // Clear any localStorage items if they exist
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                
                 console.log("User logged out successfully");
                 console.log("Redirecting to home page");
+                
+                // Force a complete page reload to ensure all state is cleared
+                window.location.replace('/');
             }
         }catch(err){
             console.error("Logout failed:", err);
+            // Even if logout API fails, clear local state and redirect
+            dispatch(removeUser());
+            dispatch({ type: "feed/addFeed", payload: null });
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.replace('/');
+        } finally {
+            // Clear logout flag
+            sessionStorage.removeItem('logging_out');
         }
     };
 
     return (
         <Motion.header
-            className={`w-full py-6 px-6 flex items-center justify-between bg-gradient-to-r ${colors.background.main} shadow-xl backdrop-blur-lg relative z-50`}
+            className={`w-full py-3 sm:py-6 px-4 sm:px-6 flex items-center justify-between bg-gradient-to-r ${colors.background.main} shadow-xl backdrop-blur-lg relative z-50`}
             initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, type: 'spring' }}
@@ -51,18 +86,20 @@ const Header = () => {
                 boxShadow: `0 8px 32px 0 ${colors.primary.main}22`,
             }}
         >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
                 <Motion.img
                     src="https://img.icons8.com/ios-filled/48/ffffff/source-code.png"
                     alt="DevTinder Logo"
-                    className="w-12 h-12 rounded-full shadow-lg"
+                    onClick={()=>handleClick()}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg cursor-pointer"
                     initial={{ rotate: -20, scale: 0.7, opacity: 0 }}
                     animate={{ rotate: 0, scale: 1, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.5, type: 'spring' }}
                     style={{ filter: `drop-shadow(0 4px 16px ${colors.primary.main}99)` }}
                 />
                 <Motion.h1
-                    className={`text-3xl md:text-4xl font-extrabold ${colors.text.primary} tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500`}
+                    onClick={()=>handleClick()}
+                    className={`text-xl sm:text-3xl md:text-4xl font-extrabold ${colors.text.primary} tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 cursor-pointer`}
                     initial={{ scale: 0.8, letterSpacing: '0.05em' }}
                     animate={{ scale: 1, letterSpacing: '0.01em' }}
                     transition={{ delay: 0.3, duration: 0.4 }}
@@ -70,8 +107,10 @@ const Header = () => {
                     DevTinder
                 </Motion.h1>
             </div>
+
+            {/* Desktop Navigation */}
             <Motion.nav
-                className={`flex gap-8 ${colors.text.primary} font-medium items-center`}
+                className={`hidden lg:flex gap-6 xl:gap-8 ${colors.text.primary} font-medium items-center`}
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
@@ -80,7 +119,7 @@ const Header = () => {
                     <>
                         <Motion.a
                             href="/"
-                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group cursor-pointer text-sm lg:text-base`}
                             whileHover={{ scale: 1.08 }}
                         >
                             Home
@@ -88,7 +127,7 @@ const Header = () => {
                         </Motion.a>
                         <Motion.a
                             href="/about"
-                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group cursor-pointer text-sm lg:text-base`}
                             whileHover={{ scale: 1.08 }}
                         >
                             About
@@ -96,7 +135,7 @@ const Header = () => {
                         </Motion.a>
                         <Motion.a
                             href="/contact"
-                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group cursor-pointer text-sm lg:text-base`}
                             whileHover={{ scale: 1.08 }}
                         >
                             Contact
@@ -104,7 +143,7 @@ const Header = () => {
                         </Motion.a>
                         <Motion.a
                             href="/Blogs"
-                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group cursor-pointer text-sm lg:text-base`}
                             whileHover={{ scale: 1.08 }}
                         >
                             Blogs
@@ -112,7 +151,7 @@ const Header = () => {
                         </Motion.a>
                         <Motion.a
                             href="/login"
-                            className={`ml-2 px-6 py-2 rounded-xl ${commonStyles.primaryGradient} ${colors.text.primary} font-semibold shadow-lg hover:from-[${colors.primary.secondary}] hover:to-[${colors.primary.main}] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[${colors.primary.main}] focus:ring-offset-2`}
+                            className={`ml-2 px-4 py-2 lg:px-6 lg:py-2 rounded-xl ${commonStyles.primaryGradient} ${colors.text.primary} font-semibold shadow-lg hover:from-[${colors.primary.secondary}] hover:to-[${colors.primary.main}] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[${colors.primary.main}] focus:ring-offset-2 cursor-pointer text-sm lg:text-base`}
                             whileHover={{ scale: 1.12, boxShadow: `0 0 24px ${colors.primary.main}` }}
                             whileTap={{ scale: 0.96 }}
                         >
@@ -125,15 +164,15 @@ const Header = () => {
                         <button
                             type="button"
                             onClick={() => setMenuOpen((open) => !open)}
-                            className="flex items-center focus:outline-none"
+                            className="flex items-center focus:outline-none cursor-pointer"
                         >
                             <img
                                 src={user?.photoUrl}
                                 alt={user.firstName}
-                                className="w-10 h-10 rounded-full border-2 border-pink-400 shadow-md object-cover"
+                                className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-pink-400 shadow-md object-cover cursor-pointer"
                                 style={{ boxShadow: `0 2px 8px ${colors.primary.main}55` }}
                             />
-                            <span className="ml-2 font-bold bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-transparent">
+                            <span className="ml-2 font-bold bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-transparent cursor-pointer text-sm lg:text-base hidden sm:block">
                                 Welcome Back {user?.firstName}
                             </span>
                         </button>
@@ -143,33 +182,28 @@ const Header = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-[9999] border border-gray-200"
+                                className="absolute right-0 mt-2 w-44 sm:w-48 bg-white rounded-xl shadow-lg py-2 z-[9999] border border-gray-200"
                                 style={{ 
                                     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
                                     zIndex: 9999
                                 }}
                             >
-                                <a
-                                    href="/settings"
-                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                    Settings
-                                </a>
-                                <Link to="/connections" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                <Link to="/settings" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer text-sm">Settings</Link>
+                                <Link to="/connections" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer text-sm">
                                     Connections
                                 </Link>
-                                <Link to="/requests" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                <Link to="/requests" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer text-sm">
                                     Requests
                                 </Link>
                                 <a
                                     href="/my-blogs"
-                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer text-sm"
                                 >
                                     My Blogs
                                 </a>
                                 <a
                                     onClick={handleLogout}
-                                    className="block px-4 py-2 text-red-500 hover:bg-gray-100 transition-colors font-semibold"
+                                    className="block px-4 py-2 text-red-500 hover:bg-gray-100 transition-colors font-semibold cursor-pointer text-sm"
                                 >
                                     Log Out
                                 </a>
@@ -178,6 +212,68 @@ const Header = () => {
                     </div>
                 )}
             </Motion.nav>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center gap-2" id="mobile-menu">
+                {user && (
+                    <img
+                        src={user?.photoUrl}
+                        alt={user.firstName}
+                        className="w-8 h-8 rounded-full border-2 border-pink-400 shadow-md object-cover"
+                        style={{ boxShadow: `0 2px 8px ${colors.primary.main}55` }}
+                    />
+                )}
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className={`p-2 rounded-lg ${colors.text.primary} focus:outline-none`}
+                >
+                    <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        {mobileMenuOpen ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        )}
+                    </svg>
+                </button>
+
+                {/* Mobile Dropdown Menu */}
+                {mobileMenuOpen && (
+                    <Motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 right-0 mt-2 mx-4 bg-white rounded-xl shadow-lg py-2 z-[9999] border border-gray-200"
+                        style={{ 
+                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                            zIndex: 9999
+                        }}
+                    >
+                        {!user ? (
+                            <>
+                                <a href="/" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">Home</a>
+                                <a href="/about" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">About</a>
+                                <a href="/contact" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">Contact</a>
+                                <a href="/Blogs" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">Blogs</a>
+                                <a href="/login" className="block px-4 py-3 text-white bg-gradient-to-r from-pink-500 to-yellow-500 mx-4 my-2 rounded-lg text-center font-semibold">Login</a>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/settings" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">Settings</Link>
+                                <Link to="/connections" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">Connections</Link>
+                                <Link to="/requests" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">Requests</Link>
+                                <a href="/my-blogs" className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors border-b border-gray-100">My Blogs</a>
+                                <a onClick={handleLogout} className="block px-4 py-3 text-red-500 hover:bg-gray-100 transition-colors font-semibold">Log Out</a>
+                            </>
+                        )}
+                    </Motion.div>
+                )}
+            </div>
         </Motion.header>
     );
 }

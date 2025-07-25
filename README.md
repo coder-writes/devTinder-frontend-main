@@ -18,7 +18,6 @@ DevTinder is a modern, interactive web application that connects developers base
 ### 🎨 Modern UI/UX
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Smooth Animations**: Framer Motion powered transitions and micro-interactions
-- **3D Elements**: Interactive 3D components using React Three Fiber
 - **Dark Theme**: Professional dark theme optimized for developers
 
 ### 📱 Key Pages
@@ -44,11 +43,6 @@ DevTinder is a modern, interactive web application that connects developers base
 - **Framer Motion 12.23.0** - Production-ready motion library
 - **React Icons 5.5.0** - Popular icon library
 - **Lucide React 0.525.0** - Beautiful & consistent icons
-
-### 3D Graphics
-- **React Three Fiber 9.2.0** - React renderer for Three.js
-- **React Three Drei 10.4.2** - Useful helpers for R3F
-- **Three.js 0.178.0** - 3D graphics library
 
 ### HTTP & API
 - **Axios 1.10.0** - Promise-based HTTP client

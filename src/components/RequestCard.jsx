@@ -36,14 +36,21 @@ const buttonVariants = {
 };
 
 const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
-    console.log('RequestCard:', request);
-    console.log('RequestCard index:', request.fromUserId);
-    // const { firstName, lastName, photo
-
-    const { fromUserId } = request;
-    console.log('fromUserId:', fromUserId);
     const [isProcessing, setIsProcessing] = useState(false);
     const [actionTaken, setActionTaken] = useState(null);
+    
+    console.log('RequestCard:', request);
+    console.log('RequestCard index:', request.fromUserId);
+    
+    const { fromUserId } = request;
+    
+    // Safety check for null or undefined fromUserId
+    if (!fromUserId || !fromUserId._id) {
+        console.error('Invalid request data:', request);
+        return null; // Don't render anything for invalid requests
+    }
+    
+    console.log('fromUserId:', fromUserId);
 
     const handleAccept = async () => {
         if (isProcessing) return;
@@ -121,7 +128,7 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
             animate="visible"
             whileHover="hover"
             custom={index}
-            className="relative bg-gradient-to-br from-gray-800/95 to-gray-900/95 backdrop-blur-lg rounded-2xl shadow-2xl p-6 w-full max-w-sm border border-purple-400/30 overflow-hidden group"
+            className="relative bg-gradient-to-br from-gray-800/95 to-gray-900/95 backdrop-blur-lg rounded-2xl shadow-2xl p-4 sm:p-6 w-full max-w-sm mx-auto border border-purple-400/30 overflow-hidden group"
             style={{
                 background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)',
                 backdropFilter: 'blur(16px)',
@@ -138,7 +145,7 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
             {/* Request badge */}
             <div className="absolute top-4 left-4 bg-purple-500/20 border border-purple-400/50 rounded-full px-2 py-1 flex items-center gap-1">
                 <FaUserPlus className="text-purple-400 text-xs" />
-                <span className="text-purple-400 text-xs font-mono">New Request</span>
+                <span className="text-purple-400 text-xs font-mono hidden sm:inline">New Request</span>
             </div>
 
             {/* Profile Image with glow effect */}
@@ -147,7 +154,7 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
                 <motion.img
                     src={fromUserId.photoUrl || 'https://via.placeholder.com/150'}
                     alt={`${fromUserId.firstName} ${fromUserId.lastName}`}
-                    className="relative w-24 h-24 rounded-full border-3 border-purple-400 shadow-xl object-cover cursor-pointer"
+                    className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-3 border-purple-400 shadow-xl object-cover cursor-pointer"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     onClick={handleViewProfile}
                     onError={(e) => {
@@ -161,12 +168,12 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
 
             {/* Name and Details */}
             <div className="text-center mb-4" onClick={handleViewProfile}>
-                <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-blue-600 bg-clip-text text-transparent mb1 cursor-pointer hover:scale-105 transition-transform">
+                <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-blue-600 bg-clip-text text-transparent mb-1 cursor-pointer hover:scale-105 transition-transform">
                     {fromUserId.firstName} {fromUserId.lastName}
                 </h3>
                 <div className="flex items-center justify-center gap-2 mb-2">
                     <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
-                    <span className="text-gray-400 text-sm font-mono capitalize">
+                    <span className="text-gray-400 text-xs sm:text-sm font-mono capitalize">
                         {fromUserId.gender || 'Developer'} {fromUserId.age && `• ${fromUserId.age} years`}
                     </span>
                     <div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>
@@ -174,7 +181,7 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
             </div>
 
             {/* Action buttons */}
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-2 sm:gap-3 justify-center">
                 <motion.button
                     variants={buttonVariants}
                     initial="initial"
@@ -182,10 +189,10 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
                     whileTap="tap"
                     onClick={handleReject}
                     disabled={isProcessing}
-                    className="group/btn bg-gradient-to-r from-red-500/20 to-red-600/20 border border-red-400/30 hover:border-red-400 text-red-300 hover:text-white p-3 rounded-xl transition-all duration-300 hover:from-red-500/30 hover:to-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed flex-1 flex items-center justify-center gap-2"
+                    className="group/btn bg-gradient-to-r from-red-500/20 to-red-600/20 border border-red-400/30 hover:border-red-400 text-red-300 hover:text-white p-2 sm:p-3 rounded-xl transition-all duration-300 hover:from-red-500/30 hover:to-red-600/30 disabled:opacity-50 disabled:cursor-not-allowed flex-1 flex items-center justify-center gap-1 sm:gap-2"
                 >
                     <FaTimes className="text-sm group-hover/btn:scale-110 transition-transform" />
-                    <span className="font-semibold">
+                    <span className="font-semibold text-xs sm:text-sm">
                         {isProcessing && actionTaken === 'rejected' ? 'Rejecting...' : 'Reject'}
                     </span>
                 </motion.button>
@@ -197,10 +204,10 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
                     whileTap="tap"
                     onClick={handleAccept}
                     disabled={isProcessing}
-                    className="group/btn bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 hover:border-green-400 text-green-300 hover:text-white p-3 rounded-xl transition-all duration-300 hover:from-green-500/30 hover:to-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex-1 flex items-center justify-center gap-2"
+                    className="group/btn bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 hover:border-green-400 text-green-300 hover:text-white p-2 sm:p-3 rounded-xl transition-all duration-300 hover:from-green-500/30 hover:to-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex-1 flex items-center justify-center gap-1 sm:gap-2"
                 >
                     <FaCheck className="text-sm group-hover/btn:scale-110 transition-transform" />
-                    <span className="font-semibold">
+                    <span className="font-semibold text-xs sm:text-sm">
                         {isProcessing && actionTaken === 'accepted' ? 'Accepting...' : 'Accept'}
                     </span>
                 </motion.button>

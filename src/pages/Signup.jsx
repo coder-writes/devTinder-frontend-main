@@ -21,14 +21,13 @@ const Signup = () => {
     const [lastName, setLastName] = useState("");
     const [emailId, setEmailID] = useState("");
     const [password, setPassword] = useState("");
-    const [phoneNo, setPhoneNo] = useState("");
     const dispatch = useDispatch();
 const handleSignUp = async (e) => {
     if (e) e.preventDefault();
     try {
         const res = await axios.post(
             createApiUrl(API_ENDPOINTS.SIGNUP),
-            { firstName, lastName, emailId, password, phoneNo },
+            { firstName, lastName, emailId, password },
             { withCredentials: true }
         );
         dispatch(setUser(res.data.data));
@@ -73,13 +72,6 @@ const handleSignUp = async (e) => {
                     placeholder="Email Address"
                     onChange={(e)=> setEmailID(e.target.value)}
                     icon={Mail}
-                />
-
-                <InputField 
-                    type="text"
-                    placeholder="Phone Number"
-                    onChange={(e)=> setPhoneNo(e.target.value)}
-                    icon={User}
                 />
 
                 <InputField 

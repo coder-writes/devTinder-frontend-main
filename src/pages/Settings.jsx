@@ -1,86 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaUserEdit, FaKey, FaTrash, FaCog, FaGithub } from "react-icons/fa";
-import * as THREE from "three";
 import { Outlet, useNavigate, useLocation } from "react-router";
 const sidebarItems = [
     { key: "editProfile", label: "Edit Profile", icon: <FaUserEdit />, route: "/settings/edit-profile" },
     { key: "changePassword", label: "Change Password", icon: <FaKey />, route: "/settings/change-password" },
     { key: "deleteAccount", label: "Delete Account", icon: <FaTrash />, route: "/settings/delete-account" },
 ];
-
-function ThreeBG() {
-    const mountRef = useRef(null);
-
-    useEffect(() => {
-        if (!mountRef.current) return;
-
-        const currentMount = mountRef.current;
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 8;
-
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setClearColor(0x000000, 0); // transparent
-        renderer.setSize(width, height);
-        currentMount.appendChild(renderer.domElement);
-
-        // Add animated glowing wireframe torus
-        const geometry = new THREE.TorusKnotGeometry(2.5, 0.12, 120, 16);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0x00ffd0,
-            wireframe: true,
-            opacity: 0.18,
-            transparent: true,
-        });
-        const torus = new THREE.Mesh(geometry, material);
-        scene.add(torus);
-
-        // Animate
-        let frameId;
-        const animate = () => {
-            torus.rotation.x += 0.003;
-            torus.rotation.y += 0.004;
-            renderer.render(scene, camera);
-            frameId = requestAnimationFrame(animate);
-        };
-        animate();
-
-        // Handle resize
-        const handleResize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
-        };
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            try {
-                cancelAnimationFrame(frameId);
-                window.removeEventListener("resize", handleResize);
-                if (currentMount && renderer.domElement && currentMount.contains(renderer.domElement)) {
-                    currentMount.removeChild(renderer.domElement);
-                }
-                renderer.dispose();
-                geometry.dispose();
-                material.dispose();
-            } catch (error) {
-                console.warn("Error during ThreeBG cleanup:", error);
-            }
-        };
-    }, []);
-
-    return (
-        <div
-            ref={mountRef}
-            className="absolute inset-0 z-0 pointer-events-none"
-            style={{ filter: "blur(0.5px)" }}
-        />
-    );
-}
 
 export default function Settings() {
     const [selected, setSelected] = useState("editProfile");
@@ -106,8 +31,6 @@ export default function Settings() {
 
     return (
         <div className="flex min-h-screen bg-gradient-to-br from-[#191b1e] via-[#232526] to-[#181a1b] font-mono text-[#e0e0e0] relative">
-            {/* Three.js animated background */}
-            <ThreeBG />
             {/* Overlay grid */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <svg width="100%" height="100%">
