@@ -17,8 +17,8 @@ const SocialLoginButton = ({ provider, icon, text, bgColor = "bg-white/5", hover
 
     return (
         <button className={`${commonStyles.socialButton} ${getButtonStyles()}`}>
-            <img src={icon} alt={provider} className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-sm sm:text-base">{text}</span>
+            <img src={icon} alt={provider} className="w-5 h-5" />
+            <span>{text}</span>
         </button>
     );
 };

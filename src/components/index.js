@@ -1,6 +1,3 @@
-// Background Components
-export { default as DevBackground } from './background/DevBackground';
-
 // Auth Components
 export { default as AuthLogo } from './auth/AuthLogo';
 export { default as AuthHeader } from './auth/AuthHeader';
@@ -34,6 +31,9 @@ export { default as RequestCard } from './RequestCard';
 export { default as ConnectionsList } from './connections/ConnectionsList';
 export { default as EmptyConnectionsState } from './connections/EmptyConnectionsState';
 export { default as EmptyRequestsState } from './connections/EmptyRequestsState';
+
+// Route Protection Components
+export { ProtectedRoute, PublicRoute } from './ProtectedRoute';
 
 // Legacy Components (to be organized)
 export { default as Footer } from './Footer';

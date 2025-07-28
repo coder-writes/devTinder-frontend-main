@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion as Motion } from 'framer-motion';
+import { Link } from 'react-router';
 
 const FeatureCard = () => {
     return (
@@ -38,12 +39,12 @@ const FeatureCard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.6, duration: 0.4 }}
             >
-                <a
-                    href="/Signup"
+                <Link
+                    to="/signup"
                     className="inline-block px-8 py-3 text-base font-semibold text-white bg-gradient-to-r from-[#ff512f] to-[#dd2476] rounded-lg hover:from-[#dd2476] hover:to-[#ff512f] transition-all duration-300"
                 >
                     Get Started
-                </a>
+                </Link>
             </Motion.div>
         </Motion.div>
     );

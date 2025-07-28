@@ -12,7 +12,7 @@ const InputField = ({
 }) => {
     return (
         <div className={commonStyles.inputField}>
-            {Icon && <Icon size={16} className="text-[#ff512f] sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" />}
+            {Icon && <Icon size={18} className="text-[#ff512f]" />}
             <input
                 type={type}
                 placeholder={placeholder}
@@ -20,7 +20,7 @@ const InputField = ({
                 onChange={onChange}
                 name={name}
                 required={required}
-                className="bg-transparent w-full focus:outline-none text-white placeholder-gray-400 text-sm sm:text-base min-w-0"
+                className="bg-transparent w-full focus:outline-none text-white placeholder-gray-400"
             />
         </div>
     );

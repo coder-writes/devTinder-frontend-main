@@ -36,12 +36,12 @@ const buttonVariants = {
 };
 
 const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
-    console.log('RequestCard:', request);
-    console.log('RequestCard index:', request.fromUserId);
+    // console.log('RequestCard:', request);
+    // console.log('RequestCard index:', request.fromUserId);
     // const { firstName, lastName, photo
 
     const { fromUserId } = request;
-    console.log('fromUserId:', fromUserId);
+    // console.log('fromUserId:', fromUserId);
     const [isProcessing, setIsProcessing] = useState(false);
     const [actionTaken, setActionTaken] = useState(null);
 
@@ -55,7 +55,7 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
         } catch (error) {
             setIsProcessing(false);
             setActionTaken(null);
-            console.error('Error accepting request:', error);
+            // console.error('Error accepting request:', error);
         }
     };
 
@@ -74,7 +74,7 @@ const RequestCard = ({ request, onAccept, onReject, index = 0 }) => {
     };
 
     const handleViewProfile = () => {
-        console.log('View profile for:', fromUserId._id);
+        // console.log('View profile for:', fromUserId._id);
         // TODO: Navigate to user profile or show modal
     };
 

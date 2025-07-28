@@ -41,18 +41,18 @@ const ConnectionsList = ({ connections = [], loading = false, error = null, onRe
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center py-12 sm:py-16 md:py-20">
+                    <div className="text-center py-20">
                         <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                             className="inline-block mb-4"
                         >
-                            <FaCode className="text-4xl sm:text-5xl md:text-6xl text-green-400" />
+                            <FaCode className="text-6xl text-green-400" />
                         </motion.div>
-                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">Loading Connections...</h2>
-                        <p className="text-sm sm:text-base text-gray-400 font-mono">Compiling your developer network</p>
+                        <h2 className="text-2xl font-bold text-white mb-2">Loading Connections...</h2>
+                        <p className="text-gray-400 font-mono">Compiling your developer network</p>
                     </div>
                 </div>
             </div>
@@ -61,21 +61,21 @@ const ConnectionsList = ({ connections = [], loading = false, error = null, onRe
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center py-12 sm:py-16 md:py-20">
+                    <div className="text-center py-20">
                         <motion.div
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                             className="inline-block mb-4"
                         >
-                            <FaExclamationTriangle className="text-4xl sm:text-5xl md:text-6xl text-red-400" />
+                            <FaExclamationTriangle className="text-6xl text-red-400" />
                         </motion.div>
-                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">Connection Error</h2>
-                        <p className="text-sm sm:text-base text-gray-400 font-mono mb-6 px-4">{error}</p>
+                        <h2 className="text-2xl font-bold text-white mb-2">Connection Error</h2>
+                        <p className="text-gray-400 font-mono mb-6">{error}</p>
                         <motion.button
                             onClick={onRefresh}
-                            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
+                            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -89,11 +89,11 @@ const ConnectionsList = ({ connections = [], loading = false, error = null, onRe
 
     if (connections.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center py-12 sm:py-16 md:py-20">
-                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">No connections found</h2>
-                        <p className="text-sm sm:text-base text-gray-400 font-mono">This state should not be reached</p>
+                    <div className="text-center py-20">
+                        <h2 className="text-2xl font-bold text-white mb-2">No connections found</h2>
+                        <p className="text-gray-400 font-mono">This state should not be reached</p>
                     </div>
                 </div>
             </div>
@@ -101,44 +101,44 @@ const ConnectionsList = ({ connections = [], loading = false, error = null, onRe
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 sm:mb-8"
+                    className="mb-8"
                 >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-4">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <div className="bg-gradient-to-r from-green-400 to-blue-500 p-2 sm:p-3 rounded-lg sm:rounded-xl">
-                                <FaUsers className="text-white text-lg sm:text-xl" />
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-gradient-to-r from-green-400 to-blue-500 p-3 rounded-xl">
+                                <FaUsers className="text-white text-xl" />
                             </div>
                             <div>
-                                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                                <h1 className="text-3xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                                     My Connections
                                 </h1>
-                                <p className="text-xs sm:text-sm text-gray-400 font-mono">
+                                <p className="text-gray-400 font-mono">
                                     {connections.length} developer{connections.length !== 1 ? 's' : ''} in your network
                                 </p>
                             </div>
                         </div>
                         
-                        <div className="flex items-center gap-2 justify-center sm:justify-end">
-                            <FaWifi className="text-green-400 text-sm" />
-                            <span className="text-green-400 text-xs sm:text-sm font-mono">Online</span>
+                        <div className="flex items-center gap-2">
+                            <FaWifi className="text-green-400" />
+                            <span className="text-green-400 text-sm font-mono">Online</span>
                         </div>
                     </div>
 
                     {/* Search Bar */}
-                    <div className="relative max-w-full sm:max-w-md">
-                        <FaSearch className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                    <div className="relative max-w-md">
+                        <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             placeholder="Search connections..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-800/50 border border-gray-600/30 rounded-lg sm:rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-sm sm:text-base text-white placeholder-gray-400 focus:outline-none focus:border-green-400/50 focus:ring-2 focus:ring-green-400/20 transition-all duration-300"
+                            className="w-full bg-gray-800/50 border border-gray-600/30 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-green-400/50 focus:ring-2 focus:ring-green-400/20 transition-all duration-300"
                         />
                     </div>
                 </motion.div>
@@ -151,11 +151,11 @@ const ConnectionsList = ({ connections = [], loading = false, error = null, onRe
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
-                            className="text-center py-12 sm:py-16 md:py-20"
+                            className="text-center py-20"
                         >
-                            <FaSearch className="text-4xl sm:text-5xl md:text-6xl text-gray-600 mx-auto mb-4" />
-                            <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No Results Found</h3>
-                            <p className="text-sm sm:text-base text-gray-400 font-mono px-4">
+                            <FaSearch className="text-6xl text-gray-600 mx-auto mb-4" />
+                            <h3 className="text-xl font-bold text-white mb-2">No Results Found</h3>
+                            <p className="text-gray-400 font-mono">
                                 No connections match "{searchTerm}"
                             </p>
                         </motion.div>
@@ -165,7 +165,7 @@ const ConnectionsList = ({ connections = [], loading = false, error = null, onRe
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                         >
                             {filteredConnections.map((connection, index) => (
                                 <motion.div

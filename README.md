@@ -18,7 +18,7 @@ DevTinder is a modern, interactive web application that connects developers base
 ### 🎨 Modern UI/UX
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Smooth Animations**: Framer Motion powered transitions and micro-interactions
-- **Animated Backgrounds**: CSS-powered animated backgrounds and visual effects
+- **3D Elements**: Interactive 3D components using React Three Fiber
 - **Dark Theme**: Professional dark theme optimized for developers
 
 ### 📱 Key Pages
@@ -46,7 +46,9 @@ DevTinder is a modern, interactive web application that connects developers base
 - **Lucide React 0.525.0** - Beautiful & consistent icons
 
 ### 3D Graphics
-- **CSS Animations** - Pure CSS-based animated backgrounds and effects
+- **React Three Fiber 9.2.0** - React renderer for Three.js
+- **React Three Drei 10.4.2** - Useful helpers for R3F
+- **Three.js 0.178.0** - 3D graphics library
 
 ### HTTP & API
 - **Axios 1.10.0** - Promise-based HTTP client
@@ -63,7 +65,6 @@ DevTinder is a modern, interactive web application that connects developers base
 
 ## 🚀 Getting Started
 
-
 ### Prerequisites
 - Node.js (v18 or higher)
 - npm or yarn package manager
@@ -74,7 +75,6 @@ DevTinder is a modern, interactive web application that connects developers base
    ```bash
    git clone https://github.com/your-username/devtinder-frontend.git
    cd devtinder-frontend
-   Also Start you Backend Server also you Can find it here https://github.com/coder-writes/dev-tinder
    ```
 
 2. **Install dependencies**
@@ -112,7 +112,7 @@ src/
 │   ├── layout/          # Layout and wrapper components
 │   ├── profile/         # Profile related components
 │   ├── ui/              # Generic UI components
-│   └── background/      # Background and visual effect components
+│   └── 3d/              # 3D graphics components
 ├── pages/               # Page components
 │   ├── Body.jsx         # Main layout wrapper
 │   ├── Feed.jsx         # Profile swiping interface

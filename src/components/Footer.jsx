@@ -1,4 +1,5 @@
 import { motion as Motion } from 'framer-motion';
+import { Link } from 'react-router';
 
 const Footer = () => (
     <Motion.footer
@@ -35,24 +36,24 @@ const Footer = () => (
                 >
                     GitHub
                 </a>
-                <a
-                    href="/privacy"
+                <Link
+                    to="/privacy"
                     className="hover:text-[#ff512f] transition-colors duration-200"
                 >
                     Privacy
-                </a>
-                <a
-                    href="/terms"
+                </Link>
+                <Link
+                    to="/terms"
                     className="hover:text-[#ff512f] transition-colors duration-200"
                 >
                     Terms
-                </a>
-                <a
-                    href="/contact"
+                </Link>
+                <Link
+                    to="/contact"
                     className="hover:text-[#ff512f] transition-colors duration-200"
                 >
                     Contact
-                </a>
+                </Link>
             </Motion.div>
         </div>
         <Motion.div
