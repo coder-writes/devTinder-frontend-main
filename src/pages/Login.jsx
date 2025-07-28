@@ -12,11 +12,11 @@ import {
 } from '../components';
 import { useDispatch } from 'react-redux';
 import {setUser} from '../utils/userSlicer';
-import axios from 'axios';
+import apiClient from '../utils/apiClient';
 import { useNavigate, Link } from 'react-router';
 import LoginError from '../components/auth/LoginError';
 import { useSelector } from 'react-redux';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
+import { API_ENDPOINTS } from '../utils/apiConfig';
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
@@ -34,16 +34,22 @@ const Login = () => {
   
     const handleLogin = async ()=>{
         try{
-            const response = await axios.post(createApiUrl(API_ENDPOINTS.LOGIN),
+            const response = await apiClient.post(API_ENDPOINTS.LOGIN,
                 {
                     emailId,
                     password
-                },
-                { withCredentials: true }
+                }
             );
-                // console.log("Login successful:", response.data);  
-                dispatch(setUser(response.data));
-                return navigate('/feed'); 
+            console.log("Login successful:", response.data);  
+            
+            // Set user data in Redux first
+            dispatch(setUser(response.data));
+            
+            // Add a small delay to ensure Redux state is updated
+            await new Promise(resolve => setTimeout(resolve, 50));
+            
+            // Then navigate to feed
+            return navigate('/feed'); 
         }catch(err){
             setError(err?.response?.data || "Login failed. Please try again.");
             console.error("Login failed:", err);

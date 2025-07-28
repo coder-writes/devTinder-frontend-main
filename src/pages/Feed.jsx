@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FaHeart, FaTimes } from 'react-icons/fa';
@@ -13,9 +12,9 @@ import {
 } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFeed } from '../utils/feedSlice';
-import axios from 'axios';
+import apiClient from '../utils/apiClient';
 import { useNavigate } from 'react-router';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
+import { API_ENDPOINTS } from '../utils/apiConfig';
 
 
 const Feed = () => {
@@ -25,40 +24,37 @@ const Feed = () => {
     const Navigate = useNavigate();
     const dispatch = useDispatch();
 
-    
-
-const user = useSelector((state) => state.user);
-useEffect(() => {
-    if (user) {
-        Navigate('/feed');
-    }
-}, []);
-
     const feed = useSelector((state) => state.feed);
+    const user = useSelector((state) => state.user);
+    const hasFetchedRef = useRef(false);
+
+    // Only fetch feed when user is authenticated and component mounts
     useEffect(() => {
-        if (!feed) {
-            Navigate('/');
+        const getFeed = async () => {
+            // Prevent multiple API calls and ensure user is authenticated
+            if (feed || hasFetchedRef.current || !user) return;
+            
+            console.log('Attempting to fetch feed for user:', user?.firstName);
+            
+            // Add a longer delay to ensure cookies are properly set
+            console.log('Waiting for cookies to be set...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            console.log('Cookies after delay:', document.cookie);
+            
+            hasFetchedRef.current = true;
+            try {
+                const response = await apiClient.get(API_ENDPOINTS.FEED);
+                console.log('Feed fetched successfully:', response.data);
+                dispatch(addFeed(response?.data?.data));
+            } catch (err) {
+                console.log("Error fetching feed:", err);
+                hasFetchedRef.current = false; // Reset on error to allow retry
+            }
         }
-    }, []);
-
-    const getFeed = async () => {
-        if (feed) return;
-        try {
-            const response = await axios.get(createApiUrl(API_ENDPOINTS.FEED), {
-                withCredentials: true
-            });
-            dispatch(addFeed(response?.data?.data));
-            Navigate('/feed');
-
-        } catch (err) {
-            console.log("Error fetching feed:", err);
-        }
-    }
-
-    
-    useEffect(() => {
-        getFeed()
-    }, []);
+        
+        getFeed();
+    }, [feed, dispatch, user]); // Add user as dependency
 
     // Toast for swipe actions
     const showToast = useCallback((direction, name) => {
@@ -102,10 +98,8 @@ useEffect(() => {
             const status = direction === 'right' ? 'interested' : 'ignored';
             if (currentProfile?._id) {
                 try {
-                    await axios.post(
-                        createApiUrl(API_ENDPOINTS.SEND_REQUEST(status, currentProfile._id)),
-                        {},
-                        { withCredentials: true }
+                    await apiClient.post(
+                        API_ENDPOINTS.SEND_REQUEST(status, currentProfile._id)
                     );
                 } catch (err) {
                     console.error('Error sending request:', err);
@@ -139,8 +133,35 @@ useEffect(() => {
         };
     }, [handleSwipe]);
 
+    // Show loading if user is not yet authenticated
+    if (!user) {
+        return (
+            <PageLayout fullHeight compact>
+                <div className="flex flex-1 items-center justify-center min-h-[60vh]">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                        <p className="text-white">Authenticating...</p>
+                    </div>
+                </div>
+            </PageLayout>
+        );
+    }
 
-    if (!feed) return;
+    // Show loading if feed is being fetched
+    if (!feed && hasFetchedRef.current) {
+        return (
+            <PageLayout fullHeight compact>
+                <div className="flex flex-1 items-center justify-center min-h-[60vh]">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                        <p className="text-white">Loading your matches...</p>
+                    </div>
+                </div>
+            </PageLayout>
+        );
+    }
+
+    if (!feed) return null;
     // console.log("Feed:", feed);
 
     if (current >= feed.length) {
