@@ -14,13 +14,12 @@ import {
   FaUser
 } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 
 const NewFeature = () => {
   const [progress, setProgress] = useState(0);
   const [activeFeature, setActiveFeature] = useState(0);
-  const user = useSelector((state) => state.user);
+
   // Simulate progress animation
   useEffect(() => {
     const interval = setInterval(() => {
@@ -141,7 +140,7 @@ const NewFeature = () => {
           className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors duration-200"
         >
           <FaArrowLeft />
-          <span>{user ? "Back to Feed" : "Back to Home"}</span>
+          <span>Back to Feed</span>
         </Link>
       </motion.div>
 
@@ -381,7 +380,6 @@ const NewFeature = () => {
               
               <div className="flex justify-center space-x-4">
                 <motion.a
-                  target='_blank'
                   href="https://github.com/coder-writes"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200"
                   whileHover={{ scale: 1.05 }}
@@ -392,8 +390,7 @@ const NewFeature = () => {
                 </motion.a>
                 
                 <motion.a
-                  target='_blank'
-                  href="https://github.com/sponsors/coder-writes"
+                href="https://github.com/sponsors/coder-writes"
                   className="inline-flex items-center gap-2 px-6 py-3 border-2 border-green-400 text-green-400 font-semibold rounded-lg hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

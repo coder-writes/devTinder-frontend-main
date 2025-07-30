@@ -4,76 +4,48 @@ import Footer from "../components/Footer.jsx";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setUser } from "../utils/userSlicer.js";
-import { useNavigate, useLocation } from "react-router";
-import { useEffect, useRef } from "react";
-import { API_ENDPOINTS } from "../utils/apiConfig";
-import apiClient from "../utils/apiClient";
-import { getToken, hasToken, isTokenExpired, removeToken } from "../utils/tokenUtils";
+import { useNavigate } from "react-router";
+import { useEffect, useCallback } from "react";
+import { createApiUrl, API_ENDPOINTS } from "../utils/apiConfig";
 
 
 const Body = () => {
     const userData = useSelector((state)=>state.user);
     const dispatch = useDispatch();
     const Navigate = useNavigate();
-    const location = useLocation();
-    const isAuthenticatingRef = useRef(false);
+    const fetchUSer = useCallback(async()=>{
+        if(userData) {
+            console.log("User already exists, skipping fetch:", userData);
+            return;
+        }
+        
+        console.log("Fetching user data...");
+        try{
+            const response = await fetch(createApiUrl(API_ENDPOINTS.PROFILE_VIEW), {
+                method: 'GET',
+                credentials: 'include', // This is the correct way to include cookies
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            console.log("Response status:", response.status);
+            
+            if(response.ok) {
+                const data = await response.json();
+                console.log("User data fetched successfully:", data);
+                dispatch(setUser(data));
+            } 
+            
+        }catch(err){
+            console.error("Network error fetching user data:", err);
+            // Don't redirect on network errors, might be temporary
+        }
+    }, [userData, dispatch, Navigate]);
 
     useEffect(()=>{
-        const fetchUserData = async () => {
-            // Skip if user is already loaded or we're not on a protected route
-            if (userData || isAuthenticatingRef.current) return;
-            
-            // Only fetch user data for protected routes
-            const protectedRoutes = ['/feed', '/connections', '/requests', '/settings'];
-            const isProtectedRoute = protectedRoutes.some(route => 
-                location.pathname.startsWith(route)
-            );
-            
-            if (!isProtectedRoute) return;
-
-            // Check if we have a valid token
-            if (!hasToken()) {
-                console.log('No token found, redirecting to home');
-                Navigate('/');
-                return;
-            }
-
-            // Check if token is expired
-            if (isTokenExpired()) {
-                console.log('Token expired, removing and redirecting to home');
-                removeToken();
-                Navigate('/');
-                return;
-            }
-
-            // Wait a bit to see if user gets set from login
-            await new Promise(resolve => setTimeout(resolve, 200));
-            
-            // Check again if user was set during the delay
-            if (userData) return;
-
-            console.log('Fetching user data for protected route:', location.pathname);
-            console.log('Using token from localStorage for authentication');
-            isAuthenticatingRef.current = true;
-            
-            try{
-                const res = await apiClient.get(API_ENDPOINTS.PROFILE_VIEW);
-                console.log('User data fetched successfully:', res.data);
-                dispatch(setUser(res.data));
-            }catch(err){
-                console.error("Error fetching user data:", err);
-                // If user fetch fails on protected route, remove token and redirect to home
-                if (isProtectedRoute) {
-                    removeToken();
-                    Navigate('/');
-                }
-            } finally {
-                isAuthenticatingRef.current = false;
-            }
-        };
-        
-        fetchUserData();
-    }, [location.pathname, userData, dispatch, Navigate]); // Include all dependencies
+        fetchUSer();
+    },[fetchUSer]);
         return (
             <div className="min-h-screen flex flex-col">
                 <Header/>

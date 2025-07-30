@@ -18,10 +18,10 @@ const Connections = () => {
             const response = await axios.get(createApiUrl(API_ENDPOINTS.USER_CONNECTIONS), {
                 withCredentials: true
             });
-            // console.log("Connections fetched successfully:", response?.data?.data);
+            console.log("Connections fetched successfully:", response?.data?.data);
             setConnections(response?.data?.data || []);
         } catch (err) {
-            // console.error("Error fetching connections:", err);
+            console.error("Error fetching connections:", err);
             setError(err.response?.data?.message || "Failed to fetch connections. Please try again.");
         } finally {
             setLoading(false);

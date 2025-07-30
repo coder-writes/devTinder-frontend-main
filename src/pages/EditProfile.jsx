@@ -8,8 +8,6 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../utils/userSlicer';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const panelVariants = {
     initial: { opacity: 0, y: 30, scale: 0.98 },
@@ -45,9 +43,9 @@ function EditProfile() {
         }
     }, [user]);
     const handleSave = async(e)=>{
-        e.preventDefault();
+        e.preventDefault(); // Prevent form submission
         try{
-            // console.log("Saving profile data:", profile); // Debug log
+            console.log("Saving profile data:", profile); // Debug log
             const response = await axios.patch(createApiUrl(API_ENDPOINTS.PROFILE_EDIT), {
                 firstName: profile.firstName,
                 lastName: profile.lastName,
@@ -58,37 +56,14 @@ function EditProfile() {
                 photoUrl: profile.photoUrl,
             }, { 
                 withCredentials: true,
-
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             });
             dispatch(setUser(response?.data?.data))
-            // console.log("Profile updated successfully:", response);
-            toast.success("Profile updated successfully! 🎉", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: {
-                    background: "#065f46",
-                    color: "#d1fae5"
-                }
-            });
+            console.log("Profile updated successfully:", response);
         }catch(err){
             console.error("Error updating profile:", err.response?.data || err.message);
-            const errorMessage = err.response?.data?.message || err.response?.data || "Failed to update profile. Please try again.";
-            toast.error(`Error: ${errorMessage}`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: {
-                    background: "#991b1b",
-                    color: "#fecaca"
-                }
-            });
         } 
     }
     
@@ -212,7 +187,6 @@ function EditProfile() {
                     }} 
                 />
             </div>
-            <ToastContainer />
         </div>
     );
 }

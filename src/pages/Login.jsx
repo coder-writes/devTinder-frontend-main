@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState ,useEffect } from 'react';
+import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import {
     AuthLayout,
@@ -12,12 +12,11 @@ import {
 } from '../components';
 import { useDispatch } from 'react-redux';
 import {setUser} from '../utils/userSlicer';
-import apiClient from '../utils/apiClient';
-import { useNavigate, Link } from 'react-router';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 import LoginError from '../components/auth/LoginError';
 import { useSelector } from 'react-redux';
-import { API_ENDPOINTS } from '../utils/apiConfig';
-import { setToken } from '../utils/tokenUtils';
+import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
@@ -25,38 +24,22 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
-    
-    useEffect(() => {
-        if (user) {
-            navigate('/feed');
-        }
-    }, [user, navigate]);
-
-  
+    if(user) {
+        navigate('/feed'); // Redirect to feed if user is already logged in// Prevent rendering the login page
+    }
     const handleLogin = async ()=>{
         try{
-            const response = await apiClient.post(API_ENDPOINTS.LOGIN,
+            const response = await axios.post(
+                createApiUrl(API_ENDPOINTS.LOGIN),
                 {
                     emailId,
                     password
-                }
+                },
+                { withCredentials: true }
             );
-            console.log("Login successful:", response.data);  
-            
-            // Store token in localStorage if provided
-            if (response.data.token) {
-                setToken(response.data.token);
-                console.log("Token stored in localStorage");
-            }
-            
-            // Set user data in Redux
-            dispatch(setUser(response.data));
-            
-            // Add a small delay to ensure Redux state is updated
-            await new Promise(resolve => setTimeout(resolve, 50));
-            
-            // Then navigate to feed
-            return navigate('/feed'); 
+                console.log("Login successful:", response.data);  
+                dispatch(setUser(response.data));
+                navigate('/feed'); 
         }catch(err){
             setError(err?.response?.data || "Login failed. Please try again.");
             console.error("Login failed:", err);
@@ -98,9 +81,9 @@ const Login = () => {
                         <input type="checkbox" className="w-4 h-4 accent-[#ff512f]" />
                         <span>Remember me</span>
                     </div>
-                    <Link to="/forgot-password" className="text-[#ff512f] hover:underline">
+                    <a href="/forgot-password" className="text-[#ff512f] hover:underline">
                         Forgot password?
-                    </Link>
+                    </a>
                 </div>
 
                 <SubmitButton type="submit" text="Log In" />
@@ -108,9 +91,9 @@ const Login = () => {
 
             <div className="text-center text-gray-400 text-sm">
                 Don't have an account?{' '}
-                <Link to="/signup" className="text-[#ff512f] hover:underline">
+                <a href="/signup" className="text-[#ff512f] hover:underline">
                     Sign up
-                </Link>
+                </a>
             </div>
         </AuthLayout>
     );

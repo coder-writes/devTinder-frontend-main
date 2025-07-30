@@ -27,17 +27,17 @@ const ConnectionCard = ({ connection, index = 0 }) => {
     const { firstName, lastName, photoUrl, gender, _id } = connection;
     
     const handleViewProfile = () => {
-        // console.log('View profile for:', _id);
+        console.log('View profile for:', _id);
         // TODO: Navigate to user profile or show modal
     };
 
     const handleSendMessage = () => {
-        // console.log('Send message to:', _id);
+        console.log('Send message to:', _id);
         // TODO: Open messaging interface
     };
 
     const handleConnect = (platform) => {
-        // console.log(`Connect on ${platform} with:`, _id);
+        console.log(`Connect on ${platform} with:`, _id);
         // TODO: Handle social platform connections
     };
     

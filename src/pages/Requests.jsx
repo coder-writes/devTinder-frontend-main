@@ -23,7 +23,7 @@ const Requests = () => {
                 {},
                 { withCredentials: true }
             );
-            // console.log("Request reviewed successfully:", response);
+            console.log("Request reviewed successfully:", response);
             dispatch(removeRequest(requestId));
             
             const statusText = status === 'accepted' ? 'accepted' : 'rejected';
@@ -56,9 +56,9 @@ const Requests = () => {
                 { withCredentials: true }
             );
             dispatch(addRequests(response.data.data));
-            // console.log("Requests fetched successfully:", response.data.data);
+            console.log("Requests fetched successfully:", response.data.data);
         } catch (err) {
-            // console.error("Error fetching requests:", err);
+            console.error("Error fetching requests:", err);
             setError("Failed to load requests. Please try again.");
             toast.error("Failed to load requests", {
                 style: {

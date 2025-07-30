@@ -10,76 +10,51 @@ import {
     SubmitButton
 } from '../components';
 import { useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router';
-import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { useState } from 'react';
 import axios from 'axios';
 import { setUser } from '../utils/userSlicer';
 import { useDispatch } from 'react-redux';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
-import { ToastContainer , toast } from 'react-toastify';
-import { setToken } from '../utils/tokenUtils';
-
 const Signup = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [emailId, setEmailID] = useState("");
     const [password, setPassword] = useState("");
+    const [phoneNo, setPhoneNo] = useState("");
     const dispatch = useDispatch();
+const handleSignUp = async (e) => {
+    if (e) e.preventDefault();
+    try {
+        const res = await axios.post(
+            createApiUrl(API_ENDPOINTS.SIGNUP),
+            { firstName, lastName, emailId, password, phoneNo },
+            { withCredentials: true }
+        );
+        dispatch(setUser(res.data.data));
+        // return navigate("/profile");
+        navigate('/settings/edit-profile');
+    } catch (err) {
+        console.error("Signup failed:", err);
+    }
+};
     const user = useSelector((state) => state.user);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (user) {
-            navigate('/feed');
-        }
-    }, [user, navigate]);
-
-    if (user) {
-        return null; 
+    if(user){
+        navigate('/feed');
     }
-
-    const handleSignUp = async () => {
-        try {
-            const res = await axios.post(
-                createApiUrl(API_ENDPOINTS.SIGNUP),
-                { firstName, lastName, emailId, password},
-                { withCredentials: true }
-            );
-            
-            // Store token if provided
-            if (res.data.token) {
-                setToken(res.data.token);
-                console.log("Token stored in localStorage after signup");
-            }
-            
-            dispatch(setUser(res.data.data));
-            return navigate('/settings/edit-profile');
-        } catch (err) {
-            const errorMessage = err?.response?.data?.message || err?.response?.data || err?.message || "Signup failed. Please try again.";
-            toast.error(errorMessage);
-            console.error("Signup failed:", err);
-        }
-    };
-
     return (
         <AuthLayout>
             <AuthLogo />
             <AuthHeader 
                 title="Create Your Account"
                 subtitle="Join DevTinder and connect with awesome devs!"
-                />
+            />
 
             <SocialLoginButtons type="signup" />
-            <ToastContainer />
 
             <AuthDivider text="or sign up with your email" />
-            <form 
-                className="space-y-4" 
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSignUp();
-                }}
-            >
+            <form className="space-y-4" onSubmit={handleSignUp}>
                 <InputField 
                     type="text"
                     placeholder="First Name"
@@ -101,6 +76,13 @@ const Signup = () => {
                 />
 
                 <InputField 
+                    type="text"
+                    placeholder="Phone Number"
+                    onChange={(e)=> setPhoneNo(e.target.value)}
+                    icon={User}
+                />
+
+                <InputField 
                     type="password"
                     placeholder="Password"
                     onChange={(e)=> setPassword(e.target.value)}
@@ -108,21 +90,21 @@ const Signup = () => {
                 />
 
                 <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <input type="checkbox" className="w-4 h-4 accent-orange-500" />
+                    <input type="checkbox" className="w-4 h-4 accent-[#ff512f]" />
                     <span>
                         I agree to the
-                        <Link to="/terms" className="text-orange-500 ml-1 hover:underline">Terms of Service</Link> and
-                        <Link to="/privacy" className="text-orange-500 ml-1 hover:underline">Privacy Policy</Link>.
+                        <a href="/terms" className="text-[#ff512f] ml-1 hover:underline">Terms of Service</a> and
+                        <a href="/privacy" className="text-[#ff512f] ml-1 hover:underline">Privacy Policy</a>.
                     </span>
                 </div>
-                <SubmitButton type="submit" text="Create Account" />
+                <SubmitButton onClick={handleSignUp} text="Create Account" />
             </form>
 
             <div className="text-center text-gray-400 text-sm">
                 Already have an account?{' '}
-                <Link to="/login" className="text-orange-500 hover:underline">
+                <a href="/login" className="text-[#ff512f] hover:underline">
                     Log in
-                </Link>
+                </a>
             </div>
         </AuthLayout>
     );

@@ -13,53 +13,24 @@ import Settings from './pages/Settings.jsx';
 import Connections from './pages/Connections.jsx';
 import Requests from './pages/Requests.jsx';
 import NewFeature from './pages/NewFeature.jsx';
-import { ProtectedRoute, PublicRoute } from './components/ProtectedRoute.jsx';
 const App = () => {
     return (
         <>
         <Provider store = {store}>
             
-        <>
+        <BrowserRouter>
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#232526] to-[#414345] text-white">
          <main className="flex-grow">
 
         <Routes>
             <Route path="/" element={<Body/>} >
-                <Route index element={
-                    <PublicRoute>
-                        <Index/>
-                    </PublicRoute>
-                } />
-                <Route path ="signup" element={
-                    <PublicRoute>
-                        <Signup/>
-                    </PublicRoute>
-                } />
-                <Route path ="login" element={
-                    <PublicRoute>
-                        <Login/>
-                    </PublicRoute>
-                } />
-                <Route  path ="feed" element={
-                    <ProtectedRoute>
-                        <Feed/>
-                    </ProtectedRoute>
-                } />
-                <Route path ="connections" element={
-                    <ProtectedRoute>
-                        <Connections/>
-                    </ProtectedRoute>
-                } />
-                <Route path ="requests" element={
-                    <ProtectedRoute>
-                        <Requests/>
-                    </ProtectedRoute>
-                } />
-                <Route path ="settings" element={
-                    <ProtectedRoute>
-                        <Settings/>
-                    </ProtectedRoute>
-                } >
+                <Route index element={<Index/>} />
+                <Route path ="signup" element={<Signup/>} />
+                <Route path ="login" element={<Login/>} />
+                <Route  path ="feed" element={<Feed/>} />
+                <Route path ="connections" element={<Connections/>} />
+                <Route path ="requests" element={<Requests/>} />
+                <Route path ="settings" element={<Settings/>} >
                     <Route path="edit-profile" element={<EditProfile/>} />
                 </Route>
                 <Route path="*" element={<NewFeature/>} />
@@ -67,7 +38,7 @@ const App = () => {
         </Routes>
          </main>
         </div>
-        </>
+        </BrowserRouter>
         </Provider>
         </>
     );
