@@ -16,7 +16,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import LoginError from '../components/auth/LoginError';
 import { useSelector } from 'react-redux';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
+
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
@@ -29,14 +29,11 @@ const Login = () => {
     }
     const handleLogin = async ()=>{
         try{
-            const response = await axios.post(
-                createApiUrl(API_ENDPOINTS.LOGIN),
+            const response = await axios.post('http://localhost:7777/login',
                 {
                     emailId,
                     password
-                },
-                { withCredentials: true }
-            );
+                },{withCredentials: true});      
                 console.log("Login successful:", response.data);  
                 dispatch(setUser(response.data));
                 navigate('/feed'); 

@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../utils/userSlicer.js";
 import { useNavigate } from "react-router";
 import { useEffect, useCallback } from "react";
-import { createApiUrl, API_ENDPOINTS } from "../utils/apiConfig";
 
 
 const Body = () => {
@@ -21,7 +20,7 @@ const Body = () => {
         
         console.log("Fetching user data...");
         try{
-            const response = await fetch(createApiUrl(API_ENDPOINTS.PROFILE_VIEW), {
+            const response = await fetch('http://localhost:7777/profile/view', {
                 method: 'GET',
                 credentials: 'include', // This is the correct way to include cookies
                 headers: {

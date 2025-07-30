@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import ConnectionsList from '../components/connections/ConnectionsList';
 import EmptyConnectionsState from '../components/connections/EmptyConnectionsState';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 
 const Connections = () => {
     const [connections, setConnections] = useState([]);
@@ -15,7 +14,7 @@ const Connections = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await axios.get(createApiUrl(API_ENDPOINTS.USER_CONNECTIONS), {
+            const response = await axios.get('http://localhost:7777/user/connections', {
                 withCredentials: true
             });
             console.log("Connections fetched successfully:", response?.data?.data);

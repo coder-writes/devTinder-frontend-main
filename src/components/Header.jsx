@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Link } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../utils/userSlicer';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 const Header = () => {
 
     const user = useSelector((state) => state.user);
@@ -26,7 +25,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try{
-            const response = await axios.post(createApiUrl(API_ENDPOINTS.LOGOUT), {}, { withCredentials: true });
+            const response = await axios.post('http://localhost:7777/logout', {}, { withCredentials: true });
             console.log("Logout successful:", response);
             if(response.status === 200) {
                 dispatch(removeUser());

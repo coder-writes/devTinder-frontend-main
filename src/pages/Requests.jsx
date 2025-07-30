@@ -7,7 +7,6 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { addRequests, removeRequest } from '../utils/requestSlice';
 import { PageLayout, RequestCard, EmptyRequestsState, PageHeader } from '../components';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 
 const Requests = () => {
     const requests = useSelector((state) => state.requests);
@@ -19,7 +18,7 @@ const Requests = () => {
     const reviewRequest = async (status, requestId) => {
         try {
             const response = await axios.post(
-                createApiUrl(API_ENDPOINTS.REVIEW_REQUEST(status, requestId)),
+                `http://localhost:7777/request/review/${status}/${requestId}`,
                 {},
                 { withCredentials: true }
             );
@@ -52,7 +51,7 @@ const Requests = () => {
             setLoading(true);
             setError(null);
             const response = await axios.get(
-                createApiUrl(API_ENDPOINTS.USER_REQUESTS_RECEIVED),
+                "http://localhost:7777/user/requests/received",
                 { withCredentials: true }
             );
             dispatch(addRequests(response.data.data));

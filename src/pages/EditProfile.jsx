@@ -2,18 +2,16 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { FaTerminal, FaUserEdit } from 'react-icons/fa';
-import ProfileCard from '../components/ProfileCard';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../utils/userSlicer';
-import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
-
 const panelVariants = {
     initial: { opacity: 0, y: 30, scale: 0.98 },
     animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, type: "spring" } },
     exit: { opacity: 0, y: -30, scale: 0.98, transition: { duration: 0.3 } },
 };
+import ProfileCard from '../components/ProfileCard';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../utils/userSlicer';
 function EditProfile() {
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
@@ -46,7 +44,7 @@ function EditProfile() {
         e.preventDefault(); // Prevent form submission
         try{
             console.log("Saving profile data:", profile); // Debug log
-            const response = await axios.patch(createApiUrl(API_ENDPOINTS.PROFILE_EDIT), {
+            const response = await axios.patch("http://localhost:7777/profile/edit", {
                 firstName: profile.firstName,
                 lastName: profile.lastName,
                 email: profile.email,
