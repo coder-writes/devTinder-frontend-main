@@ -17,6 +17,7 @@ import { useNavigate, Link } from 'react-router';
 import LoginError from '../components/auth/LoginError';
 import { useSelector } from 'react-redux';
 import { API_ENDPOINTS } from '../utils/apiConfig';
+import { setToken } from '../utils/tokenUtils';
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
@@ -42,7 +43,13 @@ const Login = () => {
             );
             console.log("Login successful:", response.data);  
             
-            // Set user data in Redux first
+            // Store token in localStorage if provided
+            if (response.data.token) {
+                setToken(response.data.token);
+                console.log("Token stored in localStorage");
+            }
+            
+            // Set user data in Redux
             dispatch(setUser(response.data));
             
             // Add a small delay to ensure Redux state is updated

@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from "react-router";
 import { useEffect, useRef } from "react";
 import { API_ENDPOINTS } from "../utils/apiConfig";
 import apiClient from "../utils/apiClient";
+import { getToken, hasToken, isTokenExpired, removeToken } from "../utils/tokenUtils";
 
 
 const Body = () => {
@@ -30,6 +31,21 @@ const Body = () => {
             
             if (!isProtectedRoute) return;
 
+            // Check if we have a valid token
+            if (!hasToken()) {
+                console.log('No token found, redirecting to home');
+                Navigate('/');
+                return;
+            }
+
+            // Check if token is expired
+            if (isTokenExpired()) {
+                console.log('Token expired, removing and redirecting to home');
+                removeToken();
+                Navigate('/');
+                return;
+            }
+
             // Wait a bit to see if user gets set from login
             await new Promise(resolve => setTimeout(resolve, 200));
             
@@ -37,6 +53,7 @@ const Body = () => {
             if (userData) return;
 
             console.log('Fetching user data for protected route:', location.pathname);
+            console.log('Using token from localStorage for authentication');
             isAuthenticatingRef.current = true;
             
             try{
@@ -45,8 +62,9 @@ const Body = () => {
                 dispatch(setUser(res.data));
             }catch(err){
                 console.error("Error fetching user data:", err);
-                // If user fetch fails on protected route, redirect to home
+                // If user fetch fails on protected route, remove token and redirect to home
                 if (isProtectedRoute) {
+                    removeToken();
                     Navigate('/');
                 }
             } finally {

@@ -15,6 +15,7 @@ import { addFeed } from '../utils/feedSlice';
 import apiClient from '../utils/apiClient';
 import { useNavigate } from 'react-router';
 import { API_ENDPOINTS } from '../utils/apiConfig';
+import { hasToken, isTokenExpired, removeToken } from '../utils/tokenUtils';
 
 
 const Feed = () => {
@@ -34,13 +35,22 @@ const Feed = () => {
             // Prevent multiple API calls and ensure user is authenticated
             if (feed || hasFetchedRef.current || !user) return;
             
+            // Check if we have a valid token before making API call
+            if (!hasToken()) {
+                console.log('No token found, redirecting to home');
+                Navigate('/');
+                return;
+            }
+
+            if (isTokenExpired()) {
+                console.log('Token expired, removing token and redirecting to home');
+                removeToken();
+                Navigate('/');
+                return;
+            }
+            
             console.log('Attempting to fetch feed for user:', user?.firstName);
-            
-            // Add a longer delay to ensure cookies are properly set
-            console.log('Waiting for cookies to be set...');
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            console.log('Cookies after delay:', document.cookie);
+            console.log('Using token from localStorage for feed API call');
             
             hasFetchedRef.current = true;
             try {
@@ -50,11 +60,18 @@ const Feed = () => {
             } catch (err) {
                 console.log("Error fetching feed:", err);
                 hasFetchedRef.current = false; // Reset on error to allow retry
+                
+                // If 401 error, token might be invalid
+                if (err.response?.status === 401) {
+                    console.log('Authentication failed, redirecting to home');
+                    removeToken();
+                    Navigate('/');
+                }
             }
         }
         
         getFeed();
-    }, [feed, dispatch, user]); // Add user as dependency
+    }, [feed, dispatch, user, Navigate]); // Add Navigate as dependency
 
     // Toast for swipe actions
     const showToast = useCallback((direction, name) => {

@@ -17,6 +17,7 @@ import { setUser } from '../utils/userSlicer';
 import { useDispatch } from 'react-redux';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
 import { ToastContainer , toast } from 'react-toastify';
+import { setToken } from '../utils/tokenUtils';
 
 const Signup = () => {
     const [firstName, setFirstName] = useState("");
@@ -44,6 +45,13 @@ const Signup = () => {
                 { firstName, lastName, emailId, password},
                 { withCredentials: true }
             );
+            
+            // Store token if provided
+            if (res.data.token) {
+                setToken(res.data.token);
+                console.log("Token stored in localStorage after signup");
+            }
+            
             dispatch(setUser(res.data.data));
             return navigate('/settings/edit-profile');
         } catch (err) {

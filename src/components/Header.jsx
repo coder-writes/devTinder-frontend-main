@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../utils/userSlicer';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
+import { removeToken } from '../utils/tokenUtils';
 
 const Header = () => {
     const user = useSelector((state) => state.user);
@@ -27,13 +28,22 @@ const Header = () => {
             const response = await axios.post(createApiUrl(API_ENDPOINTS.LOGOUT), {}, { withCredentials: true });
             // console.log("Logout successful:", response);
             if(response.status === 200) {
+                // Remove token from localStorage
+                removeToken();
+                // Clear Redux state
                 dispatch(removeUser());
                 dispatch({ type: "feed/addFeed", payload: null });
                 navigate('/');
-                // console.log("User logged out successfully");
+                console.log("User logged out successfully, token removed");
             }
-        }catch(err){
+        }catch{
             // console.error("Logout failed:", err);
+            // Even if logout API fails, clear local data
+            removeToken();
+            dispatch(removeUser());
+            dispatch({ type: "feed/addFeed", payload: null });
+            navigate('/');
+            console.log("Logout completed locally, token removed");
         }
     };
 
