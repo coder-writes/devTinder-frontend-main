@@ -13,6 +13,11 @@ import Settings from './pages/Settings.jsx';
 import Connections from './pages/Connections.jsx';
 import Requests from './pages/Requests.jsx';
 import NewFeature from './pages/NewFeature.jsx';
+import BlogSection from './components/ui/BlogSection.jsx';
+import BlogDetail from './components/ui/BlogDetail.jsx';
+import AddBlog from './components/ui/AddBlog.jsx';
+
+
 const App = () => {
     return (
         <>
@@ -30,6 +35,9 @@ const App = () => {
                 <Route  path ="feed" element={<Feed/>} />
                 <Route path ="connections" element={<Connections/>} />
                 <Route path ="requests" element={<Requests/>} />
+                <Route path="blogs" element={<BlogSection />} /> 
+                <Route path="blogs/:blogId" element={<BlogDetail />} />
+                <Route path="blogs/add" element={<AddBlog />} />
                 <Route path ="settings" element={<Settings/>} >
                     <Route path="edit-profile" element={<EditProfile/>} />
                 </Route>
