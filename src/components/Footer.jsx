@@ -74,9 +74,9 @@ const Footer = () => {
                         {[
                             { icon: <FaGithub />, label: "GitHub", link: "https://github.com/coder-writes" },
                             { icon: <FaFacebookF />, label: "Facebook", link: "#" },
-                            { icon: <FaTwitter />, label: "Twitter", link: "#" },
+                            { icon: <FaTwitter />, label: "Twitter", link: "https://x.com/risshi_codes" },
                             { icon: <FaInstagram />, label: "Instagram", link: "#" },
-                            { icon: <FaLinkedin />, label: "LinkedIn", link: "#" },
+                            { icon: <FaLinkedin />, label: "LinkedIn", link: "https://www.linkedin.com/in/rishi-verma-sde/" },
                         ].map((item, index) => (
                             <a
                                 key={index}
