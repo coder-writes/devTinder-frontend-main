@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import {
     AuthLayout,
     AuthLogo,
@@ -10,46 +10,47 @@ import {
     InputField,
     SubmitButton
 } from '../components';
-import { useDispatch } from 'react-redux';
-import {setUser} from '../utils/userSlicer';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../utils/userSlicer';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import LoginError from '../components/auth/LoginError';
-import { useSelector } from 'react-redux';
 import { createApiUrl, API_ENDPOINTS } from '../utils/apiConfig';
+
 const Login = () => {
     const [emailId, setEmail] = useState('aman@gmail.com');
     const [password, setPassword] = useState('Rishi@123');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
-    if(user) {
-        navigate('/feed'); // Redirect to feed if user is already logged in// Prevent rendering the login page
+
+    if (user) {
+        navigate('/feed');
     }
-    const handleLogin = async ()=>{
-        try{
+
+    const handleLogin = async () => {
+        try {
             const response = await axios.post(
                 createApiUrl(API_ENDPOINTS.LOGIN),
-                {
-                    emailId,
-                    password
-                },
+                { emailId, password },
                 { withCredentials: true }
             );
-                console.log("Login successful:", response.data);  
-                dispatch(setUser(response.data));
-                navigate('/feed'); 
-        }catch(err){
+            console.log("Login successful:", response.data);
+            dispatch(setUser(response.data));
+            navigate('/feed');
+        } catch (err) {
             setError(err?.response?.data || "Login failed. Please try again.");
             console.error("Login failed:", err);
         }
-    }
+    };
+
     return (
         <AuthLayout>
             <LoginError message={error ? (typeof error === 'string' ? error : error.message || "Login failed. Please try again.") : null} />
             <AuthLogo />
-            <AuthHeader 
+            <AuthHeader
                 title="Welcome Back"
                 subtitle="Log in to DevTinder and connect with awesome devs!"
             />
@@ -62,20 +63,31 @@ const Login = () => {
                     handleLogin();
                 }}
             >
-                <InputField 
+                <InputField
                     value={emailId}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="Email Address"
                     icon={Mail}
                 />
-                <InputField 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    type="password"
-                    placeholder="Password"
-                    icon={Lock}
-                />
+
+                {/* Password Field with Eye Icon */}
+                <div className="relative">
+                    <InputField
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Password"
+                        icon={Lock}
+                    />
+                    <span
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </span>
+                </div>
+
                 <div className="flex items-center justify-between text-sm text-gray-300">
                     <div className="flex items-center gap-2">
                         <input type="checkbox" className="w-4 h-4 accent-[#ff512f]" />
