@@ -9,18 +9,18 @@ const Footer = () => {
 
     return (
         <Motion.footer
-            className="w-fit py-7 bg-gradient-to-r from-[#232526] to-[#414345] text-white  shadow-inner "
+            className="w-full py-7 bg-gradient-to-r from-[#232526] to-[#414345] text-white shadow-inner"
             initial={{ y: 60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, type: 'spring' }}
         >
-            <div className="max-w-fit mx-auto px-25 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-24 text-sm text-center sm:text-left">
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-8 text-sm text-center sm:text-left">
 
                 {/* Logo & About */}
-                <div >
-                    <div className="flex items-center justify-center sm:justify-start gap-3 mb-4 ml-3">
-                        <img src={Logo} alt="DevTinder Logo" className="w-12 h-12 object-cover " />
-                        <span className="text-2xl font-extrabold hover:underline transition-all  duration-300 cursor-pointer">DevTinder</span>
+                <div>
+                    <div className="flex items-center justify-center sm:justify-start gap-3 mb-4">
+                        <img src={Logo} alt="DevTinder Logo" className="w-12 h-12 object-cover" />
+                        <span className="text-2xl font-extrabold hover:underline transition-all duration-300 cursor-pointer">DevTinder</span>
                     </div>
                     <p className="text-gray-300 text-lg">
                         Connect. Collaborate. Code. Your perfect coding partner awaits.
@@ -29,25 +29,24 @@ const Footer = () => {
 
                 {/* Contact Info */}
                 <div>
-                    <h3 className=" font-extrabold mb-4 text-2xl hover:underline transition-all  duration-300 cursor-pointer">Contact</h3>
+                    <h3 className="font-extrabold mb-4 text-2xl hover:underline transition-all duration-300 cursor-pointer">Contact</h3>
                     <ul className="space-y-3 text-gray-200 text-lg">
                         <li className="flex items-center justify-center sm:justify-start gap-2">
                             <MdPhone className="text-[#ff512f]" /> +91 123 456 7890
                         </li>
-                        <li className="flex items-center justify-center sm:justify-start gap-2 ">
+                        <li className="flex items-center justify-center sm:justify-start gap-2">
                             <MdEmail className="text-[#ff512f]" /> devtinder@example.com
                         </li>
-                        <li className="flex items-center justify-center sm:justify-start gap-2 ">
+                        <li className="flex items-center justify-center sm:justify-start gap-2">
                             <MdLocationOn className="text-[#ff512f]" /> India
                         </li>
                     </ul>
-
                 </div>
 
                 {/* Quick Links */}
                 <div className='text-center sm:text-left'>
-                    <h3 className="text-2xl font-extrabold mb-4 hover:underline transition-all  duration-300 cursor-pointer">Quick Links</h3>
-                    <ul className="space-y-3 text-gray-200 text-lg flex flex-col items-center sm:items-start ml-5">
+                    <h3 className="text-2xl font-extrabold mb-4 hover:underline transition-all duration-300 cursor-pointer">Quick Links</h3>
+                    <ul className="space-y-3 text-gray-200 text-lg flex flex-col items-center sm:items-start">
                         <li>
                             <a href="/" className="hover:bg-gradient-to-r hover:from-[#ff512f] hover:to-[#dd2476] hover:text-transparent hover:bg-clip-text transition">
                                 Home
@@ -69,12 +68,11 @@ const Footer = () => {
                             </a>
                         </li>
                     </ul>
-
                 </div>
 
                 {/* Newsletter */}
                 <div className="text-center">
-                    <h3 className="text-2xl font-bold mb-4 text-white ">Subscribe for Updates</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">Subscribe for Updates</h3>
 
                     <input
                         type="email"
@@ -124,11 +122,10 @@ const Footer = () => {
                 </p>
             </div>
             <div className="text-center text-gray-300 mt-2">
-                <p className="text-md">All rights reserved.</p>
+                <p className="text-md">All Rights reserved.</p>
             </div>
         </Motion.footer>
     );
 };
 
 export default Footer;
-
