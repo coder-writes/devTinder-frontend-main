@@ -1,3 +1,5 @@
+
+import GoToTopButton from './components/ui/GoToTopButton';
 import { BrowserRouter,Route,Routes } from 'react-router';
 import {Index} from './pages/Index.jsx';
 import Header from './components/Header.jsx';
@@ -42,7 +44,10 @@ const App = () => {
                 <Route path="*" element={<NewFeature/>} />
             </Route>
         </Routes>
+        
          </main>
+         <GoToTopButton />
+
         </div>
         </BrowserRouter>
         </Provider>
