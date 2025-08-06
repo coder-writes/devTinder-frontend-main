@@ -1,5 +1,6 @@
 import { motion as Motion } from 'framer-motion';
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaXTwitter } from "react-icons/fa6";
 import { MdEmail, MdPhone, MdLocationOn } from 'react-icons/md';
 import Logo from '../assets/code-svgrepo-com.svg';
 
@@ -86,29 +87,34 @@ const Footer = () => {
                     </button>
 
                     {/* Social Media Icons */}
-                    <div className="flex justify-center gap-5 mt-8 text-white text-2xl">
-                        {[
-                            { icon: <FaGithub />, label: "GitHub", link: "https://github.com/coder-writes" },
-                            { icon: <FaFacebookF />, label: "Facebook", link: "#" },
-                            { icon: <FaTwitter />, label: "Twitter", link: "https://x.com/risshi_codes" },
-                            { icon: <FaInstagram />, label: "Instagram", link: "#" },
-                            { icon: <FaLinkedin />, label: "LinkedIn", link: "https://www.linkedin.com/in/rishi-verma-sde/" },
-                        ].map((item, index) => (
-                            <a
-                                key={index}
-                                href={item.link}
-                                aria-label={item.label}
-                                className="p-3 border border-white rounded-full transition-all duration-300 hover:text-white hover:bg-gradient-to-r from-[#ff512f] to-[#dd2476] shadow-lg"
-                            >
-                                {item.icon}
-                            </a>
-                        ))}
+                    <div className="flex justify-center gap-5 mt-8 text-white text-2xl mt-12">
+                    {[
+                        { icon: <FaGithub />, label: "GitHub", link: "https://github.com/coder-writes" },
+                        { icon: <FaFacebookF />, label: "Facebook", link: "/" },
+                        { icon: <FaXTwitter />, label: "X (Twitter)", link: "https://x.com/risshi_codes" },
+                        { icon: <FaInstagram />, label: "Instagram", link: "/" },
+                        { icon: <FaLinkedin />, label: "LinkedIn", link: "https://www.linkedin.com/in/rishi-verma-sde/" },
+                    ].map((item, index) => {
+                        const isExternal = item.link.startsWith("http"); // remove this when the facebook and instagram links are added.
+                        return (
+                        <a
+                            key={index}
+                            href={item.link}
+                            aria-label={item.label}
+                            {...(isExternal && { target: "_blank", rel: "noopener noreferrer" })} // Replace this by <target="_blank"> when facebook and instagram links are added.
+                            className="group relative p-3 border border-white rounded-full transition-all duration-300 hover:text-white hover:bg-gradient-to-r from-[#ff512f] to-[#dd2476] shadow-lg"
+                        >
+                            {item.icon}
+                            {/* Tooltip with top arrow */}
+                            <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-sm bg-black text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                            {item.label}
+                            <span className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></span>
+                            </span>
+                        </a>
+                        );
+                    })}
                     </div>
-
                 </div>
-
-
-
             </div>
 
             {/* Bottom Area */}
