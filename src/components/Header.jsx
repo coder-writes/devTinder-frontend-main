@@ -249,13 +249,14 @@ import { colors, commonStyles } from "../theme/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../utils/userSlicer";
 import { createApiUrl, API_ENDPOINTS } from "../utils/apiConfig";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
 
@@ -283,6 +284,22 @@ const Header = () => {
       console.error("Logout failed:", err);
     }
   };
+
+  // Define navigation items
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Blogs", path: "/blogs" },
+  ];
+
+  const userNavItems = [
+    { name: "Settings", path: "/settings" },
+    { name: "Connections", path: "/connections" },
+    { name: "Requests", path: "/requests" },
+    { name: "My Blogs", path: "/my-blogs" },
+    { name: "Add Blog", path: "/add-blog" },
+  ];
 
   return (
     <>
@@ -351,18 +368,24 @@ const Header = () => {
         >
           {!user ? (
             <>
-              {["Home", "About", "Contact", "Blogs"].map((item) => (
+              {navItems.map((item) => (
                 <Link
-                  key={item}
-                  to={`/${item.toLowerCase()}`}
-                  className="px-4 py-2 rounded-md transition-all duration-300 hover:bg-[#ffffff12]"
+                  key={item.name}
+                  to={item.path}
+                  className={`px-4 py-2 rounded-md transition-all duration-300 ${
+                    location.pathname === item.path
+                      ? "bg-gradient-to-r from-pink-500 to-yellow-500 text-white shadow-md"
+                      : "hover:bg-[#ffffff12]"
+                  }`}
                 >
-                  {item}
+                  {item.name}
                 </Link>
               ))}
               <Link
                 to="/login"
-                className={`ml-2 px-6 py-2 rounded-xl ${commonStyles.primaryGradient} ${colors.text.primary} font-semibold shadow-lg hover:brightness-110 transition-all duration-300`}
+                className={`ml-2 px-6 py-2 rounded-xl ${commonStyles.primaryGradient} ${colors.text.primary} font-semibold shadow-lg hover:brightness-110 transition-all duration-300 ${
+                  location.pathname === "/login" ? "brightness-125" : ""
+                }`}
               >
                 Login
               </Link>
@@ -390,36 +413,19 @@ const Header = () => {
                   transition={{ duration: 0.2 }}
                   className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-[9999] border border-gray-200"
                 >
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Settings
-                  </Link>
-                  <Link
-                    to="/connections"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Connections
-                  </Link>
-                  <Link
-                    to="/requests"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Requests
-                  </Link>
-                  <Link
-                    to="/my-blogs"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    My Blogs
-                  </Link>
-                  <Link
-                    to="/add-blog"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Add Blog
-                  </Link>
+                  {userNavItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={`block px-4 py-2 text-gray-700 ${
+                        location.pathname === item.path
+                          ? "bg-gradient-to-r from-pink-500 to-yellow-500 text-white"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 font-semibold"
@@ -437,54 +443,45 @@ const Header = () => {
         <div className="md:hidden flex flex-col items-start gap-3 px-6 py-4 bg-[#242424] text-white shadow-lg z-40">
           {!user ? (
             <>
-              {["Home", "About", "Contact", "Blogs"].map((item) => (
+              {navItems.map((item) => (
                 <Link
-                  key={item}
-                  to={`/${item.toLowerCase()}`}
-                  className="w-full px-4 py-2 rounded-md transition-all duration-300 hover:bg-[#ffffff12]"
+                  key={item.name}
+                  to={item.path}
+                  className={`w-full px-4 py-2 rounded-md transition-all duration-300 ${
+                    location.pathname === item.path
+                      ? "bg-gradient-to-r from-pink-500 to-yellow-500 text-white"
+                      : "hover:bg-[#ffffff12]"
+                  }`}
                 >
-                  {item}
+                  {item.name}
                 </Link>
               ))}
               <Link
                 to="/login"
-                className="w-full px-4 py-2 mt-2 rounded-md bg-gradient-to-r from-pink-500 to-yellow-500 text-white text-center"
+                className={`w-full px-4 py-2 mt-2 rounded-md text-white text-center ${
+                  location.pathname === "/login"
+                    ? "bg-gradient-to-r from-pink-500 to-yellow-500 brightness-125"
+                    : "bg-gradient-to-r from-pink-500 to-yellow-500"
+                }`}
               >
                 Login
               </Link>
             </>
           ) : (
             <>
-              <Link
-                to="/settings"
-                className="w-full px-4 py-2 rounded-md hover:bg-[#ffffff12]"
-              >
-                Settings
-              </Link>
-              <Link
-                to="/connections"
-                className="w-full px-4 py-2 rounded-md hover:bg-[#ffffff12]"
-              >
-                Connections
-              </Link>
-              <Link
-                to="/requests"
-                className="w-full px-4 py-2 rounded-md hover:bg-[#ffffff12]"
-              >
-                Requests
-              </Link>
-              <Link
-                to="/my-blogs"
-                className="w-full px-4 py-2 rounded-md hover:bg-[#ffffff12]"
-              >
-                My Blogs
-              </Link>
-              <Link
-                to="/add-blog"
-                className="w-full px-4 py-2 rounded-md hover:bg-[#ffffff12]"
-              >
-                Add Blog
-              </Link>
+              {userNavItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`w-full px-4 py-2 rounded-md ${
+                    location.pathname === item.path
+                      ? "bg-gradient-to-r from-pink-500 to-yellow-500 text-white"
+                      : "hover:bg-[#ffffff12]"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
               <button
                 onClick={handleLogout}
                 className="w-full px-4 py-2 text-red-500 rounded-md hover:bg-[#ffffff12] text-left"
