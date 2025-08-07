@@ -155,7 +155,7 @@ const Contacts = () => {
           </div>
           <div className='p-3 md:p-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-full text-white hover:scale-110 transition-all duration-200'>
           <a
-          href='/'
+          href='https://github.com/coder-writes'
           target='_blank'
           rel="noopener noreferrer"
           >
