@@ -146,7 +146,7 @@ const Contacts = () => {
           <h3 className='py-2 md:py-4 flex text-lg md:text-2xl font-semibold '>Find me on</h3>
            <div className='p-3 md:p-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-full text-white hover:scale-110 transition-all duration-200'>
           <a
-          href='https://www.linkedin.com/in/dhruv-mantri-952965266/'
+          href='https://www.linkedin.com/in/rishi-verma-sde/'
           target='_blank'
           rel="noopener noreferrer"
           >
@@ -155,7 +155,7 @@ const Contacts = () => {
           </div>
           <div className='p-3 md:p-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-full text-white hover:scale-110 transition-all duration-200'>
           <a
-          href='https://github.com/503BINGPOT'
+          href='/'
           target='_blank'
           rel="noopener noreferrer"
           >
