@@ -95,7 +95,7 @@ const Header = () => {
                             <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-yellow-500 transition-all group-hover:w-full"></span>
                         </Motion.a>
                         <Motion.a
-                            href="/contact"
+                            href="/contacts"
                             className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
                             whileHover={{ scale: 1.08 }}
                         >

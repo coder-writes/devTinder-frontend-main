@@ -13,6 +13,7 @@ import Settings from './pages/Settings.jsx';
 import Connections from './pages/Connections.jsx';
 import Requests from './pages/Requests.jsx';
 import NewFeature from './pages/NewFeature.jsx';
+import Contacts from './pages/Contacts.jsx';
 const App = () => {
     return (
         <>
@@ -33,6 +34,7 @@ const App = () => {
                 <Route path ="settings" element={<Settings/>} >
                     <Route path="edit-profile" element={<EditProfile/>} />
                 </Route>
+                <Route path="contacts" element={<Contacts/>} />
                 <Route path="*" element={<NewFeature/>} />
             </Route>
         </Routes>
