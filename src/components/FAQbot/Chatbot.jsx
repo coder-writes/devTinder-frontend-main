@@ -88,7 +88,7 @@ export default function ChatBot() {
   const [chat, setChat] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true); // New state to track initial load
+  const [isFirstLoad, setIsFirstLoad] = useState(true); 
   const chatRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -99,133 +99,87 @@ export default function ChatBot() {
     scrollToBottom();
   }, [chat, isOpen]);
 
-  // Handler for when the user clicks a main question button
   const handleQuestionClick = (q) => {
     const selected = QUESTIONS[q];
     if (!selected) return;
 
-    // Clear loader when a question is clicked
     setIsLoadingOptions(false);
-
-    // Add the user's question to the chat
     setChat((prev) => [...prev, { from: "user", text: q }]);
-
-    // Show the typing indicator
     setIsTyping(true);
-
-    // After a delay, add the bot's main answer
     setTimeout(() => {
       setChat((prev) => [...prev, { from: "bot", text: selected.text }]);
       setIsTyping(false);
 
-      // After another delay, add the follow-up buttons AND the Main Menu button
       setTimeout(() => {
         setChat((prev) => [
           ...prev,
-          { from: "bot", followUps: selected.followUps, parentQuestion: q, showMainMenuButton: true },
-        ]);
-      }, 1000);
-    }, 1000);
+          { from: "bot", followUps: selected.followUps, parentQuestion: q, showMainMenuButton: true },]);
+      }, 1100);
+    }, 1100);
   };
 
-  // Handler for when the user clicks a follow-up question
   const handleFollowUpClick = (parentQuestion, followUp) => {
-    // Add the user's follow-up question to the chat
     setChat((prev) => [...prev, { from: "user", text: followUp.question }]);
 
-    // Show the typing indicator
     setIsTyping(true);
-
-    // After a delay, add the bot's response
     setTimeout(() => {
       setIsTyping(false);
       setChat((prev) => [...prev, { from: "bot", text: followUp.text }]);
-
-      // Always add the "You can navigate to the main menu" prompt and button after any follow-up answer
       setTimeout(() => {
         setChat((prev) => [
           ...prev,
           { from: "bot", text: "You can navigate to the main menu for more options.", isMainMenuPrompt: true },
         ]);
-      }, 500); // Small delay for the prompt message
-    }, 1000); // Delay for bot's answer
+      }, 500); 
+    }, 1000); 
   };
 
-  // Renders the initial set of questions with conditional delay
   const renderInitialQuestions = () => {
-    // Clear loader whenever initial questions are rendered
     setIsLoadingOptions(false);
 
-    // Step 1: Display the welcome message immediately if it's the first load
     if (isFirstLoad) {
-      setChat([]); // Clear chat only on first load
+      setChat([]); 
       setChat([
         {
           from: "bot",
-          text: "✨ Welcome to DevTinder! I'm Nova, your assistant. I'm here to help you get started. What would you like to know? ❤️",
+          text: "✨ Welcome to DevTinder ❤️❤️! I'm Nova, your assistant. I'm here to help you get started. What would you like to know?",
           isWelcome: true,
         },
       ]);
 
-      // Step 2: After a short delay, show the loader
       setTimeout(() => {
         setIsLoadingOptions(true);
       }, 500);
 
-      // Step 3: After 3 seconds of loading, hide the loader and start showing questions one by one
       setTimeout(() => {
         setIsLoadingOptions(false);
-        // Add a new message to chat that will render the initial questions with staggered effect
         setChat((prevChat) => [
           ...prevChat,
           { from: "bot", initialOptions: questionOptions, isStaggered: true }
         ]);
-        setIsFirstLoad(false); // Mark first load as complete
-      }, 3500); // 500ms initial delay + 3000ms loader duration
+        setIsFirstLoad(false); 
+      }, 3500); 
     } else {
-      // If it's not the first load (i.e., coming from Main Menu button), append questions instantly
       setChat((prevChat) => [
         ...prevChat,
-        { from: "bot", initialOptions: questionOptions, isStaggered: false } // No staggered effect for subsequent loads
+        { from: "bot", initialOptions: questionOptions, isStaggered: false } 
       ]);
     }
   };
 
-  // Function to reset all states when closing the chatbot
   const resetChatbot = () => {
     setIsOpen(false);
     setChat([]);
     setIsTyping(false);
     setIsLoadingOptions(false);
-    setIsFirstLoad(true); // Reset to true so next open is a fresh start
+    setIsFirstLoad(true); 
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans">
-      {/* Chatbot toggle button with neon effect and robot icon */}
       {!isOpen && (
-        <button
-          onClick={() => {
-            setIsOpen(true);
-            renderInitialQuestions();
-          }}
-          className="bg-black text-white p-4 rounded-full border border-white/10 shadow-xl transition-all hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 flex items-center gap-2 group"
-          style={{ boxShadow: "0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.1)" }}
-          title="Open Nova Chatbot"
-        >
-          {/* Robot SVG Icon */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="feather feather-cpu group-hover:animate-pulse"
-          >
+        <button onClick={() => { setIsOpen(true); renderInitialQuestions();}} className="bg-black text-white p-4 rounded-full border border-white/10 shadow-xl transition-all hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 flex items-center gap-2 group" style={{ boxShadow: "0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.1)" }} title="Open Nova Chatbot">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-cpu group-hover:animate-pulse">
             <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
             <rect x="9" y="9" width="6" height="6"></rect>
             <path d="M15 2v2"></path>
@@ -241,32 +195,24 @@ export default function ChatBot() {
         </button>
       )}
 
-      {/* Chatbot window */}
-      {isOpen && (
-        <div className="w-[320px] h-[470px] bg-zinc-950 text-white border border-white/10 rounded-xl shadow-2xl flex flex-col overflow-hidden">
-          {/* Header */}
+      {isOpen && ( <div className="w-[320px] h-[470px] bg-zinc-950 text-white border border-white/10 rounded-xl shadow-2xl flex flex-col overflow-hidden">
           <div className="bg-zinc-900 px-4 py-2 flex justify-between items-center text-sm">
             <span className="font-bold">Nova - DevTinder Assistant</span>
-            <button
-              onClick={resetChatbot} // Use the resetChatbot function here
-              className="text-white text-xl leading-none"
-            >
-              ×
-            </button>
+            <button onClick={resetChatbot}   className="text-white text-xl leading-none"> ×</button>
           </div>
 
-          {/* Chat messages container */}
           <div className="flex-1 p-3 space-y-3 overflow-y-auto custom-scrollbar">
             {chat.map((msg, idx) => (
               <div key={idx} className={`${msg.from === "user" ? "text-right" : "text-left"}`}>
-                {/* Regular text messages (user, bot answer, welcome, main menu prompt) */}
                 {!msg.followUps && !msg.initialOptions && !msg.isMainMenuPrompt && (
                   <div
-                    className={`inline-block max-w-[80%] px-4 py-2 text-sm ${
+                    className={`inline-block max-w-[90%] px-2 py-2 text-sm ${
                       msg.from === "user"
                         ? "bg-emerald-500 rounded-xl text-white"
                         : msg.isWelcome
-                        ? "bg-blue-700 text-white font-bold rounded-xl shadow-lg border-2 italic border-white/20 my-2 mx-auto"
+                        ? "bg-gradient-to-br from-red-500 via-purple-900 to-pink-300 text-white gap-1 text-center rounded-xl shadow-lg border-2 italic border-white/20 px-1.5 py-1.5 m-2.5 text-lg"
+
+
                         : "bg-purple-700 rounded-xl text-white"
                     }`}
                   >
@@ -274,54 +220,35 @@ export default function ChatBot() {
                   </div>
                 )}
 
-                {/* Conditional rendering for follow-up questions and Main Menu button */}
                 {msg.followUps && (
                   <div className="flex flex-wrap gap-2 mt-2 text-left">
                     {msg.followUps.map((fup, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleFollowUpClick(msg.parentQuestion, fup)}
-                        className="bg-zinc-700 hover:bg-zinc-600 text-sm px-3 py-1 rounded-full border border-white/10 transition font-medium"
-                      >
+                      <button key={i} onClick={() => handleFollowUpClick(msg.parentQuestion, fup)} className="bg-zinc-700 hover:bg-zinc-600 text-sm px-3 py-1 rounded-full border border-white/10 transition font-medium" >
                         {fup.question}
                       </button>
                     ))}
-                    {/* Main Menu button always appears with follow-up options */}
-                    <button
-                      onClick={renderInitialQuestions}
-                      className="bg-orange-500  text-sm px-3 py-1 rounded-full border border-white transition flex items-center gap-1"
-                    >
+                    <button onClick={renderInitialQuestions} className="bg-orange-500  text-sm px-3 py-1 rounded-full border border-white transition flex items-center gap-1">
                       <span>🗃️ </span>
-                      <span className="text-black font-bold" >Main Menu</span>
+                      <span className="text-black" >Main Menu</span>
                     </button>
                   </div>
                 )}
-                {/* Conditionally render the "Main Menu" prompt and button */}
                 {msg.isMainMenuPrompt && (
                   <div className="mt-2 flex flex-col gap-2 justify-start items-start">
-                    <div className="bg-pink-600 inline-block px-4 py-2 text-sm rounded-xl text-white italic">
-                        {msg.text} {/* Use msg.text for the prompt message */}
+                    <div className="bg-blue-600 inline-block px-4 py-2 text-sm rounded-xl text-white italic">
+                        {msg.text} 
                     </div>
-                    <button
-                      onClick={renderInitialQuestions}
-                      className="bg-orange-500 text-sm px-3 py-1 rounded-full border border-white transition flex items-center gap-1"
-                    >
+                    <button onClick={renderInitialQuestions} className="bg-orange-500 text-sm px-3 py-1 rounded-full border border-white transition flex items-center gap-1">
                       <span>🗃️ </span>
-                      <span className="text-black font-bold" >Main Menu</span>
+                      <span className="text-black" >Main Menu</span>
                     </button>
                   </div>
                 )}
 
-                {/* Conditional rendering for initial questions / main menu questions */}
                 {msg.initialOptions && (
                   <div key={`initial-options-${idx}`} className="flex flex-wrap gap-2 mt-2 text-left">
                     {msg.initialOptions.map((opt, index) => (
-                      <button
-                        key={opt}
-                        onClick={() => handleQuestionClick(opt)}
-                        className={`bg-zinc-700 hover:bg-zinc-600 text-sm px-3 py-1 rounded-xl border border-white/10 ${msg.isStaggered ? 'opacity-0 animate-fade-in' : ''}`}
-                        style={msg.isStaggered ? { animationDelay: `${index * 200}ms` } : {}}
-                      >
+                      <button key={opt}  onClick={() => handleQuestionClick(opt)} className={`bg-zinc-700 hover:bg-zinc-600 text-sm px-3 py-1 rounded-xl border border-white/10 ${msg.isStaggered ? 'opacity-0 animate-fade-in' : ''}`} style={msg.isStaggered ? { animationDelay: `${index * 200}ms` } : {}}>
                         {opt}
                       </button>
                     ))}
@@ -330,7 +257,6 @@ export default function ChatBot() {
               </div>
             ))}
 
-            {/* Conditional loader */}
             {isLoadingOptions && (
               <div className="text-zinc-400 text-sm italic flex items-center space-x-2">
                 <div className="dot-flashing"></div>
@@ -338,16 +264,13 @@ export default function ChatBot() {
               </div>
             )}
 
-            {isTyping && (
-              <div className="text-zinc-400 text-sm italic">Nova is typing...</div>
-            )}
+            {isTyping && ( <div className="text-white-400 text-lg italic text-center">Nova is typing.....</div>)}
 
             <div ref={chatRef} />
           </div>
         </div>
       )}
       <style>{`
-        /* Custom Scrollbar for better aesthetics */
         .custom-scrollbar::-webkit-scrollbar {
           width: 8px;
         }
@@ -366,7 +289,6 @@ export default function ChatBot() {
           background-color: #6b7280; /* Tailwind's bg-gray-500 */
         }
 
-        /* Loader Animation */
         .dot-flashing {
           position: relative;
           width: 6px;
@@ -411,8 +333,6 @@ export default function ChatBot() {
             background-color: #3b4249;
           }
         }
-        
-        /* Fade-in animation for questions */
         .animate-fade-in {
           animation: fadeIn 0.5s forwards;
         }
