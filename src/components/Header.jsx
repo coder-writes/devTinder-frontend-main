@@ -435,6 +435,119 @@ const Header = () => {
                 </Motion.div>
               )}
             </div>
+
+            <Motion.nav
+                className={`flex gap-8 ${colors.text.primary} font-medium items-center`}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+            >
+                {!user && (
+                    <>
+                        <Motion.a
+                            href="/"
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            whileHover={{ scale: 1.08 }}
+                        >
+                            Home
+                            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-yellow-500 transition-all group-hover:w-full"></span>
+                        </Motion.a>
+                        <Motion.a
+                            href="/about"
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            whileHover={{ scale: 1.08 }}
+                        >
+                            About
+                            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-yellow-500 transition-all group-hover:w-full"></span>
+                        </Motion.a>
+                        <Motion.a
+                            href="/contacts"
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            whileHover={{ scale: 1.08 }}
+                        >
+                            Contact
+                            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-yellow-500 transition-all group-hover:w-full"></span>
+                        </Motion.a>
+                        <Motion.a
+                            href="/Blogs"
+                            className={`hover:text-[${colors.primary.main}] transition-colors duration-200 relative group`}
+                            whileHover={{ scale: 1.08 }}
+                        >
+                            Blogs
+                            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-yellow-500 transition-all group-hover:w-full"></span>
+                        </Motion.a>
+                        <Motion.a
+                            href="/login"
+                            className={`ml-2 px-6 py-2 rounded-xl ${commonStyles.primaryGradient} ${colors.text.primary} font-semibold shadow-lg hover:from-[${colors.primary.secondary}] hover:to-[${colors.primary.main}] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[${colors.primary.main}] focus:ring-offset-2`}
+                            whileHover={{ scale: 1.12, boxShadow: `0 0 24px ${colors.primary.main}` }}
+                            whileTap={{ scale: 0.96 }}
+                        >
+                            Login
+                        </Motion.a>
+                    </>
+                )}
+                {user && (
+                    <div className="relative z-[9999]" id="user-menu">
+                        <button
+                            type="button"
+                            onClick={() => setMenuOpen((open) => !open)}
+                            className="flex items-center focus:outline-none"
+                        >
+                            <img
+                                src={user?.photoUrl}
+                                alt={user.firstName}
+                                className="w-10 h-10 rounded-full border-2 border-pink-400 shadow-md object-cover"
+                                style={{ boxShadow: `0 2px 8px ${colors.primary.main}55` }}
+                            />
+                            <span className="ml-2 font-bold bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-transparent">
+                                Welcome Back {user?.firstName}
+                            </span>
+                        </button>
+                        {menuOpen && (
+                            <Motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-[9999] border border-gray-200"
+                                style={{ 
+                                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                                    zIndex: 9999
+                                }}
+                            >
+                                <a
+                                    href="/settings"
+                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                                >
+                                    Settings
+                                </a>
+                                <Link to="/connections" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                    Connections
+                                </Link>
+                                <Link to="/requests" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                    Requests
+                                </Link>
+                                <a
+                                    href="/my-blogs"
+                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                                >
+                                    My Blogs
+                                </a>
+                                <a
+                                    onClick={handleLogout}
+                                    className="block px-4 py-2 text-red-500 hover:bg-gray-100 transition-colors font-semibold"
+                                >
+                                    Log Out
+                                </a>
+                            </Motion.div>
+                        )}
+                    </div>
+                )}
+            </Motion.nav>
+        </Motion.header>
+    );
+}
+
           )}
         </Motion.nav>
       </Motion.header>
@@ -495,5 +608,6 @@ const Header = () => {
     </>
   );
 };
+
 
 export default Header;
