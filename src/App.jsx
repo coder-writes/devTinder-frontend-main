@@ -16,6 +16,8 @@ import NewFeature from './pages/NewFeature.jsx';
 import BlogList from './components/ui/BlogSection.jsx';
 import BlogDetail from './components/ui/BlogDetail.jsx';
 import AddBlog from './components/ui/AddBlog.jsx';
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
 const App = () => {
     return (
         <>
@@ -30,6 +32,8 @@ const App = () => {
                 <Route index element={<Index/>} />
                 <Route path ="signup" element={<Signup/>} />
                 <Route path ="login" element={<Login/>} />
+                <Route path ="forgot-password" element={<ForgotPassword/>} />
+                <Route path ="reset-password/:token" element={<ResetPassword/>} />
                 <Route  path ="feed" element={<Feed/>} />
                 <Route path ="connections" element={<Connections/>} />
                 <Route path ="requests" element={<Requests/>} />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import {
     AuthLayout,
     AuthLogo,
@@ -93,9 +94,9 @@ const Login = () => {
                         <input type="checkbox" className="w-4 h-4 accent-[#ff512f]" />
                         <span>Remember me</span>
                     </div>
-                    <a href="/forgot-password" className="text-[#ff512f] hover:underline">
+                    <Link to="/forgot-password" className="text-[#ff512f] hover:underline">
                         Forgot password?
-                    </a>
+                    </Link>
                 </div>
 
                 <SubmitButton type="submit" text="Log In" />
@@ -103,9 +104,9 @@ const Login = () => {
 
             <div className="text-center text-gray-400 text-sm">
                 Don't have an account?{' '}
-                <a href="/signup" className="text-[#ff512f] hover:underline">
+                <Link to="/signup" className="text-[#ff512f] hover:underline">
                     Sign up
-                </a>
+                </Link>
             </div>
         </AuthLayout>
     );
