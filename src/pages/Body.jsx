@@ -7,6 +7,7 @@ import { setUser } from "../utils/userSlicer.js";
 import { useNavigate } from "react-router";
 import { useEffect, useCallback } from "react";
 import { createApiUrl, API_ENDPOINTS } from "../utils/apiConfig";
+import Chatbot from "../components/FAQbot/Chatbot.jsx";
 
 
 const Body = () => {
@@ -52,6 +53,7 @@ const Body = () => {
                 <main className="flex-1">
                     <Outlet/>
                 </main>
+                <Chatbot/>
                 <Footer/>
             </div>
         )
